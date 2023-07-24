@@ -22,9 +22,9 @@ export default () => {
         }}
       />
       <Tabs.Screen
-        name="visitations"
+        name="visits"
         options={{
-          tabBarLabel: "Visitations",
+          tabBarLabel: "Visits",
           tabBarIcon: () => {
             return (
               <MaterialIcons name="emoji-people" size={30} color={"black"} />
