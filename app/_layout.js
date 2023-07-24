@@ -1,11 +1,6 @@
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 
-export const unstable_settings = {
-  // Ensure any route can link back to `/`
-  initialRouteName: "home",
-};
-
 const Layout = () => {
   const [fontsLoaded] = useFonts({
     DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
@@ -18,8 +13,11 @@ const Layout = () => {
   }
 
   return (
-    <Stack initialRouteName="home">
-      <Stack.Screen name="home" />
+    <Stack>
+      <Stack.Screen
+        name="(tabs)"
+        options={{ headerTitle: "", headerShown: false }}
+      />
     </Stack>
   );
 };
