@@ -13,7 +13,7 @@ export default () => {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="Home"
         options={{
           tabBarLabel: "Home",
           tabBarIcon: () => {
@@ -22,7 +22,7 @@ export default () => {
         }}
       />
       <Tabs.Screen
-        name="visits"
+        name="Visits"
         options={{
           tabBarLabel: "Visits",
           tabBarIcon: () => {
@@ -33,7 +33,7 @@ export default () => {
         }}
       />
       <Tabs.Screen
-        name="register"
+        name="Register"
         options={{
           tabBarLabel: "Register",
           tabBarIcon: () => {
@@ -42,7 +42,7 @@ export default () => {
         }}
       />
       <Tabs.Screen
-        name="parcels"
+        name="Parcels"
         options={{
           tabBarLabel: "Parcels",
           tabBarIcon: () => {
@@ -51,7 +51,7 @@ export default () => {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="Profile"
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: () => {

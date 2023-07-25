@@ -1,12 +1,30 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { Component } from "react";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-const home = () => {
+const Tab = createMaterialTopTabNavigator();
+
+function HomeScreen() {
   return (
-    <View>
-      <Text>home</Text>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Home!</Text>
     </View>
   );
-};
+}
 
-export default home;
+function SettingsScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Settings!</Text>
+    </View>
+  );
+}
+
+export default function Home() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="" component={HomeScreen} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
+    </Tab.Navigator>
+  );
+}
