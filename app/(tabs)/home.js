@@ -23,7 +23,7 @@ function SettingsScreen() {
 export default function Home() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="" component={HomeScreen} />
+      <Tab.Screen name="Homeee" component={HomeScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
