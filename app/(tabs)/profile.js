@@ -15,11 +15,17 @@ export default function Profile() {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text onPress={handleLogOut}>Profile</Text>
-      <Text style={{ marginTop: 100 }} onPress={handlePress}>
-        Console Log User
-      </Text>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 100,
+      }}
+    >
+      <Text>Hello, {currentUser.displayName}</Text>
+      <Text onPress={handlePress}>Console Log User</Text>
+      <Text onPress={handleLogOut}>Log Out!</Text>
     </View>
   );
 }
