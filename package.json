@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@google-cloud/vision": "^3.1.4",
     "@react-navigation/material-top-tabs": "^6.6.3",
     "axios": "^1.4.0",
     "expo": "^48.0.7",
