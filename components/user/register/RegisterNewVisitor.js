@@ -27,6 +27,7 @@ const RegisterNewVisitor = () => {
         <Text style={styles.label}>Full Name (same as Identity Card)</Text>
         <TextInput
           autoCapitalize="characters"
+          selectionColor="#007aff"
           style={styles.input}
           value={name}
           onChangeText={(text) => setName(text.toUpperCase())}
@@ -37,6 +38,7 @@ const RegisterNewVisitor = () => {
         <Text style={styles.label}>Identity Card Number:</Text>
         <TextInput
           autoCapitalize="characters"
+          selectionColor="#007aff"
           style={styles.input}
           value={idNumber}
           onChangeText={(text) => setIdNumber(text.toUpperCase())}
@@ -47,6 +49,7 @@ const RegisterNewVisitor = () => {
         <Text style={styles.label}>Car Plate Number:</Text>
         <TextInput
           autoCapitalize="characters"
+          selectionColor="#007aff"
           style={styles.input}
           value={carPlateNumber}
           onChangeText={(text) => setCarPlateNumber(text.toUpperCase())}
@@ -57,6 +60,7 @@ const RegisterNewVisitor = () => {
         <Text style={styles.label}>Telephone Number:</Text>
         <TextInput
           autoCapitalize="characters"
+          selectionColor="#007aff"
           style={styles.input}
           value={phoneNumber}
           onChangeText={(text) => setPhoneNumber(text.toUpperCase())}
@@ -67,6 +71,7 @@ const RegisterNewVisitor = () => {
         <Text style={styles.label}>Visiting Date:</Text>
         <TextInput
           autoCapitalize="characters"
+          selectionColor="#007aff"
           style={styles.input}
           value={visitDate}
           onChangeText={(text) => setVisitDate(text.toUpperCase())}
@@ -77,6 +82,7 @@ const RegisterNewVisitor = () => {
         <Text style={styles.label}>Visiting Time:</Text>
         <TextInput
           autoCapitalize="characters"
+          selectionColor="#007aff"
           style={styles.input}
           value={visitTime}
           onChangeText={(text) => setVisitTime(text.toUpperCase())}
@@ -87,6 +93,7 @@ const RegisterNewVisitor = () => {
         <Text style={styles.label}>Visiting Purpose:</Text>
         <TextInput
           autoCapitalize="characters"
+          selectionColor="#007aff"
           style={styles.input}
           value={visitPurpose}
           onChangeText={(text) => setVisitPurpose(text.toUpperCase())}
@@ -129,6 +136,7 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
+    fontFamily: "DMBold",
   },
   button: {
     backgroundColor: "#007AFF",
