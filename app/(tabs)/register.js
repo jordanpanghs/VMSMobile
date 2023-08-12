@@ -1,4 +1,10 @@
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import React, { Component, useState } from "react";
 import SwitchSelector from "react-native-switch-selector";
 import RegisterNewVisitor from "../../components/user/register/RegisterNewVisitor";
@@ -17,7 +23,9 @@ export default function Register() {
 
   return (
     <View style={styles.container}>
-      <RegisterNewVisitor />
+      <ScrollView>
+        <RegisterNewVisitor />
+      </ScrollView>
       <SwitchSelector
         options={options}
         initial={0}
@@ -34,7 +42,6 @@ export default function Register() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
   },
   floatingButton: {
     position: "absolute",
