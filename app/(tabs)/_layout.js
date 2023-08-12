@@ -6,10 +6,12 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 export default () => {
   return (
+    //Bottom Tab Bar Navigator
+
     <Tabs
       screenOptions={{
-        tabBarStyle: { height: 65 }, // set the background color for the tab bar
-        tabBarLabelStyle: { fontSize: 13, marginTop: 0, marginBottom: 5 }, // set the font size and margin for the tab bar label
+        tabBarStyle: { height: 65 },
+        tabBarLabelStyle: { fontSize: 13, marginTop: 0, marginBottom: 5 },
       }}
     >
       <Tabs.Screen
