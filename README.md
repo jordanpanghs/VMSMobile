@@ -1,11 +1,10 @@
-# Expo Router Example
+# Mobile Application for Visitor Management System written in Expo
 
-Use [`expo-router`](https://expo.github.io/router) to build native navigation using files in the `app/` directory.
-
-## 🚀 How to use
+## 🚀 How to run the program
 
 ```sh
-npx create-expo-app -e with-router
+npx expo
+
 ```
 
 ## 📝 Notes
