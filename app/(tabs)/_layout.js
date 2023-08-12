@@ -3,6 +3,9 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import { TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default () => {
   return (
@@ -41,6 +44,38 @@ export default () => {
           tabBarIcon: () => {
             return <Feather name="plus-square" size={30} color={"black"} />;
           },
+          headerRight: () => (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                flexWrap: "nowrap",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  width: 30,
+                  height: 40,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <FontAwesome5 name="trash-alt" size={25} color={"black"} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: 60,
+                  height: 40,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicon name="checkmark-sharp" size={30} color={"black"} />
+              </TouchableOpacity>
+            </View>
+          ),
         }}
       />
       <Tabs.Screen

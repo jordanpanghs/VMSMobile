@@ -1,6 +1,6 @@
 import {
   Text,
-  View,
+  SafeAreaView,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
@@ -22,7 +22,7 @@ export default function Register() {
   ];
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView>
         <RegisterNewVisitor />
       </ScrollView>
@@ -35,7 +35,7 @@ export default function Register() {
         hasPadding
         onPress={(value) => setRegisterSelection(value)}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
