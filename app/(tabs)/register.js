@@ -24,7 +24,7 @@ export default function Register() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <RegisterNewVisitor />
+        {registerSelection === "visitor" && <RegisterNewVisitor />}
       </ScrollView>
       <SwitchSelector
         options={options}
