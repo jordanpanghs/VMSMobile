@@ -3,7 +3,7 @@ import React, { Component, useState } from "react";
 import SwitchSelector from "react-native-switch-selector";
 
 export default function Register() {
-  const [registerSelection, setRegisterSelection] = useState("");
+  const [registerSelection, setRegisterSelection] = useState("visitor");
 
   const handleSelection = (selection) => {
     setRegisterSelection(selection);
