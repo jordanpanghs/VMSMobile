@@ -99,10 +99,6 @@ const RegisterNewVisitor = () => {
           onChangeText={(text) => setVisitPurpose(text.toUpperCase())}
         />
       </View>
-
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -112,6 +108,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flex: 1,
     padding: 25,
+    marginBottom: 40,
   },
   inputContainer: {
     backgroundColor: "white",
