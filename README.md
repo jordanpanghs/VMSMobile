@@ -1,11 +1,10 @@
 # Mobile Application for Visitor Management System written in Expo
 
-## 🚀 How to use
+## 🚀 How to run the program
 
 ```sh
-npx expo --web
-or
-npx expo --android (requires Android Studio)
+npx expo
+
 ```
 
 ## 📝 Notes
