@@ -21,17 +21,17 @@ const RegisterNewVisitor = () => {
   const [visitorIC, setVisitorIC] = useState("");
   const [visitorCarPlate, setVisitorCarPlate] = useState("");
   const [visitorTelNo, setVisitorTelNo] = useState("");
-  const [visitorVisitDateTime, setVisitorVisitDateTime] = useState("");
+  const [visitorVisitDateTime, setVisitorVisitDateTime] = useState(new Date());
   const [visitorVisitPurpose, setVisitorVisitPurpose] = useState("");
 
-  const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
-    setDate(currentDate);
+    currentDate.setSeconds(0);
+    setVisitorVisitDateTime(currentDate);
   };
 
   const showMode = (currentMode) => {
@@ -118,7 +118,7 @@ const RegisterNewVisitor = () => {
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Visiting Date:</Text>
           <View style={styles.dateTimeContainer}>
-            <Text>{date.toLocaleString()}</Text>
+            <Text>{visitorVisitDateTime.toLocaleString()}</Text>
             <View style={styles.dateTimeIcons}>
               <TouchableOpacity onPress={showDatepicker}>
                 <Feather name="calendar" size={30} color={"black"} />
@@ -133,9 +133,10 @@ const RegisterNewVisitor = () => {
         <SafeAreaView>
           {show && (
             <DateTimePicker
+              accentColor="#007aff"
               minimumDate={new Date()}
               testID="dateTimePicker"
-              value={date}
+              value={visitorVisitDateTime}
               mode={mode}
               is24Hour={true}
               onChange={onChange}

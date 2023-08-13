@@ -17,14 +17,17 @@ export default () => {
       screenOptions={{
         tabBarStyle: { height: 65 },
         tabBarLabelStyle: { fontSize: 13, marginTop: 0, marginBottom: 5 },
+        tabBarActiveBackgroundColor: "#f2f2f2",
+        tabBarActiveTintColor: "#007aff",
+        tabBarInactiveTintColor: "black",
       }}
     >
       <Tabs.Screen
         name="Home"
         options={{
           tabBarLabel: "Home",
-          tabBarIcon: () => {
-            return <Ionicon name="home" size={30} color={"black"} />;
+          tabBarIcon: ({ focused, color }) => {
+            return <Ionicon name="home" size={30} color={color} />;
           },
         }}
       />
@@ -32,9 +35,9 @@ export default () => {
         name="Visits"
         options={{
           tabBarLabel: "Visits",
-          tabBarIcon: () => {
+          tabBarIcon: ({ focused, color }) => {
             return (
-              <MaterialIcons name="emoji-people" size={30} color={"black"} />
+              <MaterialIcons name="emoji-people" size={30} color={color} />
             );
           },
         }}
@@ -43,8 +46,8 @@ export default () => {
         name="Register"
         options={{
           tabBarLabel: "Register",
-          tabBarIcon: () => {
-            return <Feather name="plus-square" size={30} color={"black"} />;
+          tabBarIcon: ({ focused, color }) => {
+            return <Feather name="plus-square" size={30} color={color} />;
           },
         }}
       />
@@ -52,8 +55,8 @@ export default () => {
         name="Parcels"
         options={{
           tabBarLabel: "Parcels",
-          tabBarIcon: () => {
-            return <Feather name="package" size={30} color={"black"} />;
+          tabBarIcon: ({ focused, color }) => {
+            return <Feather name="package" size={30} color={color} />;
           },
         }}
       />
@@ -61,13 +64,9 @@ export default () => {
         name="Profile"
         options={{
           tabBarLabel: "Profile",
-          tabBarIcon: () => {
+          tabBarIcon: ({ focused, color }) => {
             return (
-              <MaterialCommunityIcons
-                name="account"
-                size={30}
-                color={"black"}
-              />
+              <MaterialCommunityIcons name="account" size={30} color={color} />
             );
           },
         }}
