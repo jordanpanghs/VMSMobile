@@ -1,12 +1,174 @@
-import { View, Text } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
+  Button,
+} from "react-native";
+import React, { useState } from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-const RegisterNewParcel = () => {
+import { db } from "../../../firebase";
+import { collection, addDoc } from "firebase/firestore";
+
+import Feather from "react-native-vector-icons/Feather";
+
+function RegisterNewParcel() {
+  const [parcelReceiverName, setParcelReceiverName] = useState("");
+  const [parcelReceiverTelNo, setParcelReceiverTelNo] = useState("");
+  const [parcelReceiverUnit, setParcelReceiverUnit] = useState("");
+  const [parcelTrackingNumber, setParcelTrackingNumber] = useState("");
+
+  const addParcel = () => {
+    if (
+      parcelReceiverName.trim() === "" ||
+      parcelReceiverTelNo.trim() === "" ||
+      parcelReceiverUnit.trim() === "" ||
+      parcelTrackingNumber.trim() === ""
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    const dbInstance = collection(db, "registeredParcels");
+    addDoc(dbInstance, {
+      parcelReceiverName: parcelReceiverName,
+      parcelReceiverTelNo: parcelReceiverTelNo,
+      parcelReceiverUnit: parcelReceiverUnit,
+      parcelTrackingNumber: parcelTrackingNumber,
+    }).then(() => {
+      setParcelReceiverName("");
+      setParcelReceiverTelNo("");
+      setParcelReceiverUnit("");
+      setParcelTrackingNumber("");
+      alert("Added successfully");
+    });
+  };
+
   return (
-    <View>
-      <Text>RegisterNewParcel</Text>
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Receiver Name</Text>
+          <TextInput
+            selectionColor="#007aff"
+            style={styles.input}
+            value={parcelReceiverName}
+            onChangeText={(text) =>
+              setParcelReceiverName(
+                text.replace(/[^a-zA-Z\s]/g, "").toUpperCase()
+              )
+            }
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Receiver Phone Number</Text>
+          <TextInput
+            selectionColor="#007aff"
+            keyboardType="numeric"
+            style={styles.input}
+            value={parcelReceiverTelNo}
+            onChangeText={(text) =>
+              setParcelReceiverTelNo(text.replace(/[^0-9]/g, "").toUpperCase())
+            }
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Parcel Tracking Number</Text>
+          <TextInput
+            selectionColor="#007aff"
+            style={styles.input}
+            value={parcelTrackingNumber}
+            onChangeText={(text) => setParcelTrackingNumber(text.toUpperCase())}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Receiver Unit</Text>
+          <TextInput
+            selectionColor="#007aff"
+            style={styles.input}
+            value={parcelReceiverUnit}
+            onChangeText={(text) => setParcelReceiverUnit(text.toUpperCase())}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={addParcel}>
+            <Text style={styles.buttonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
   );
-};
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "column",
+    flex: 1,
+    height: "auto",
+    padding: 20,
+  },
+  inputContainer: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 20,
+    marginBottom: 20,
+  },
+  dateTimeText: {
+    fontFamily: "DMBold",
+  },
+  dateTimeContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "#cccccc",
+    padding: 10,
+  },
+  dateTimeIcons: {
+    flexDirection: "row",
+    gap: 5,
+  },
+  row: {
+    flexDirection: "row",
+    marginBottom: 10,
+  },
+  column: {
+    flex: 1,
+  },
+  label: {
+    fontSize: 16,
+    fontFamily: "DMRegular",
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    fontFamily: "DMBold",
+  },
+  buttonContainer: {
+    width: "50%",
+    justifyContent: "center",
+    flex: 1,
+    alignSelf: "center",
+  },
+  button: {
+    backgroundColor: "#007AFF",
+    borderRadius: 5,
+    padding: 10,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontFamily: "DMBold",
+  },
+});
 
 export default RegisterNewParcel;

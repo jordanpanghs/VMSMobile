@@ -84,14 +84,14 @@ const RegisterNewVisitor = () => {
     <ScrollView>
       <View style={styles.container}>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Full Name (same as Identity Card)</Text>
+          <Text style={styles.label}>Full Name (same as Identity Card):</Text>
           <TextInput
             autoCapitalize="characters"
             selectionColor="#007aff"
             style={styles.input}
             value={visitorName}
             onChangeText={(text) =>
-              setVisitorName(text.replace(/[^a-zA-Z]/g, "").toUpperCase())
+              setVisitorName(text.replace(/[^a-zA-Z\s]/g, "").toUpperCase())
             }
           />
         </View>
@@ -136,7 +136,9 @@ const RegisterNewVisitor = () => {
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Visiting Date:</Text>
           <View style={styles.dateTimeContainer}>
-            <Text>{visitorVisitDateTime.toLocaleString()}</Text>
+            <Text style={styles.dateTimeText}>
+              {visitorVisitDateTime.toLocaleString()}
+            </Text>
             <View style={styles.dateTimeIcons}>
               <TouchableOpacity onPress={showDatepicker}>
                 <Feather name="calendar" size={30} color={"black"} />
@@ -195,6 +197,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 20,
     marginBottom: 20,
+  },
+  dateTimeText: {
+    fontFamily: "DMBold",
   },
   dateTimeContainer: {
     flexDirection: "row",
