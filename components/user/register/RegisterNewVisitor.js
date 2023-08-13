@@ -48,6 +48,18 @@ const RegisterNewVisitor = () => {
   };
 
   const addVisitor = () => {
+    if (
+      visitorName.trim() === "" ||
+      visitorIC.trim() === "" ||
+      visitorCarPlate.trim() === "" ||
+      visitorTelNo.trim() === "" ||
+      visitorVisitDateTime.trim() === "" ||
+      visitorVisitPurpose.trim() === ""
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
     const dbInstance = collection(db, "registeredVisitors");
     addDoc(dbInstance, {
       //add visitor id according to the number of documents in the collection
@@ -78,18 +90,21 @@ const RegisterNewVisitor = () => {
             selectionColor="#007aff"
             style={styles.input}
             value={visitorName}
-            onChangeText={(text) => setVisitorName(text.toUpperCase())}
+            onChangeText={(text) =>
+              setVisitorName(text.replace(/[^a-zA-Z]/g, "").toUpperCase())
+            }
           />
         </View>
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Identity Card Number:</Text>
           <TextInput
+            keyboardType="numeric"
             autoCapitalize="characters"
             selectionColor="#007aff"
             style={styles.input}
             value={visitorIC}
-            onChangeText={(text) => setVisitorIC(text.toUpperCase())}
+            onChangeText={(text) => setVisitorIC(text.replace(/[^0-9]/g, ""))}
           />
         </View>
 
@@ -107,11 +122,14 @@ const RegisterNewVisitor = () => {
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Telephone Number:</Text>
           <TextInput
+            keyboardType="numeric"
             autoCapitalize="characters"
             selectionColor="#007aff"
             style={styles.input}
             value={visitorTelNo}
-            onChangeText={(text) => setVisitorTelNo(text.toUpperCase())}
+            onChangeText={(text) =>
+              setVisitorTelNo(text.replace(/[^0-9]/g, ""))
+            }
           />
         </View>
 
