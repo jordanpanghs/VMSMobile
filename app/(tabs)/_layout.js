@@ -7,6 +7,8 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import RegisterNewVisitor from "../../components/user/register/RegisterNewVisitor";
+
 export default () => {
   return (
     //Bottom Tab Bar Navigator
@@ -44,38 +46,6 @@ export default () => {
           tabBarIcon: () => {
             return <Feather name="plus-square" size={30} color={"black"} />;
           },
-          headerRight: () => (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                flexWrap: "nowrap",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  width: 30,
-                  height: 40,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <FontAwesome5 name="trash-alt" size={25} color={"black"} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  width: 60,
-                  height: 40,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Ionicon name="checkmark-sharp" size={30} color={"black"} />
-              </TouchableOpacity>
-            </View>
-          ),
         }}
       />
       <Tabs.Screen

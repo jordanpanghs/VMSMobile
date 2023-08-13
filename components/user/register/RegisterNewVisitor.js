@@ -9,95 +9,111 @@ import {
 import React, { useState } from "react";
 
 const RegisterNewVisitor = () => {
-  const [name, setName] = useState("");
-  const [idNumber, setIdNumber] = useState("");
-  const [carPlateNumber, setCarPlateNumber] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [visitDate, setVisitDate] = useState("");
-  const [visitTime, setVisitTime] = useState("");
-  const [visitPurpose, setVisitPurpose] = useState("");
+  const [visitorName, setName] = useState("");
+  const [visitorIC, setIdNumber] = useState("");
+  const [visitorCarPlate, setCarPlateNumber] = useState("");
+  const [visitorTelNo, setPhoneNumber] = useState("");
+  const [visitorVisitDateTime, setVisitDate] = useState("");
+  const [visitorVisitPurpose, setVisitPurpose] = useState("");
 
-  const handleSubmit = () => {
-    // Handle form submission here
+  const addVisitor = () => {
+    // const dbInstance = collection(db, "registeredVisitors");
+    // addDoc(dbInstance, {
+    //   //add visitor id according to the number of documents in the collection
+    //   visitorName: visitorName,
+    //   visitorIC: visitorIC,
+    //   visitorCarPlate: visitorCarPlate,
+    //   visitorTelNo: visitorTelNo,
+    //   visitorVisitDateTime: visitorVisitDateTime,
+    //   visitorVisitPurpose: visitorVisitPurpose,
+    // }).then(() => {
+    //   setVisitorName("");
+    //   setVisitorIC("");
+    //   setVisitorCarPlate("");
+    //   setVisitorTelNo("");
+    //   setVisitorVisitDateTime("");
+    //   setVisitorVisitPurpose("");
+
+    //   alert("Added successfully");
+    //   // router.push("/");
+    // });
+    console.log("hi");
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Full Name (same as Identity Card)</Text>
-        <TextInput
-          autoCapitalize="characters"
-          selectionColor="#007aff"
-          style={styles.input}
-          value={name}
-          onChangeText={(text) => setName(text.toUpperCase())}
-        />
-      </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Full Name (same as Identity Card)</Text>
+          <TextInput
+            autoCapitalize="characters"
+            selectionColor="#007aff"
+            style={styles.input}
+            value={visitorName}
+            onChangeText={(text) => setName(text.toUpperCase())}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Identity Card Number:</Text>
-        <TextInput
-          autoCapitalize="characters"
-          selectionColor="#007aff"
-          style={styles.input}
-          value={idNumber}
-          onChangeText={(text) => setIdNumber(text.toUpperCase())}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Identity Card Number:</Text>
+          <TextInput
+            autoCapitalize="characters"
+            selectionColor="#007aff"
+            style={styles.input}
+            value={visitorIC}
+            onChangeText={(text) => setIdNumber(text.toUpperCase())}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Car Plate Number:</Text>
-        <TextInput
-          autoCapitalize="characters"
-          selectionColor="#007aff"
-          style={styles.input}
-          value={carPlateNumber}
-          onChangeText={(text) => setCarPlateNumber(text.toUpperCase())}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Car Plate Number:</Text>
+          <TextInput
+            autoCapitalize="characters"
+            selectionColor="#007aff"
+            style={styles.input}
+            value={visitorCarPlate}
+            onChangeText={(text) => setCarPlateNumber(text.toUpperCase())}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Telephone Number:</Text>
-        <TextInput
-          autoCapitalize="characters"
-          selectionColor="#007aff"
-          style={styles.input}
-          value={phoneNumber}
-          onChangeText={(text) => setPhoneNumber(text.toUpperCase())}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Telephone Number:</Text>
+          <TextInput
+            autoCapitalize="characters"
+            selectionColor="#007aff"
+            style={styles.input}
+            value={visitorTelNo}
+            onChangeText={(text) => setPhoneNumber(text.toUpperCase())}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Visiting Date:</Text>
-        <TextInput
-          autoCapitalize="characters"
-          selectionColor="#007aff"
-          style={styles.input}
-          value={visitDate}
-          onChangeText={(text) => setVisitDate(text.toUpperCase())}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Visiting Date:</Text>
+          <TextInput
+            autoCapitalize="characters"
+            selectionColor="#007aff"
+            style={styles.input}
+            value={visitorVisitDateTime}
+            onChangeText={(text) => setVisitDate(text.toUpperCase())}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Visiting Time:</Text>
-        <TextInput
-          autoCapitalize="characters"
-          selectionColor="#007aff"
-          style={styles.input}
-          value={visitTime}
-          onChangeText={(text) => setVisitTime(text.toUpperCase())}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Visiting Purpose:</Text>
+          <TextInput
+            autoCapitalize="characters"
+            selectionColor="#007aff"
+            style={styles.input}
+            value={visitorVisitPurpose}
+            onChangeText={(text) => setVisitPurpose(text.toUpperCase())}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Visiting Purpose:</Text>
-        <TextInput
-          autoCapitalize="characters"
-          selectionColor="#007aff"
-          style={styles.input}
-          value={visitPurpose}
-          onChangeText={(text) => setVisitPurpose(text.toUpperCase())}
-        />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={addVisitor}>
+            <Text style={styles.buttonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
@@ -107,8 +123,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     flex: 1,
-    padding: 25,
-    marginBottom: 40,
+    height: "auto",
+    padding: 20,
   },
   inputContainer: {
     backgroundColor: "white",
@@ -135,6 +151,12 @@ const styles = StyleSheet.create({
     padding: 10,
     fontFamily: "DMBold",
   },
+  buttonContainer: {
+    width: "50%",
+    justifyContent: "center",
+    flex: 1,
+    alignSelf: "center",
+  },
   button: {
     backgroundColor: "#007AFF",
     borderRadius: 5,
@@ -144,7 +166,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "DMBold",
   },
 });
 
