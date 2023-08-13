@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  KeyboardAvoidingView,
+  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
@@ -20,24 +20,13 @@ const LoginScreen = () => {
 
   const { login, currentUser } = useAuth();
 
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged((user) => {
-  //     if (user) {
-  //       router.replace("/Home");
-  //     }
-  //   });
-
-  //   return unsubscribe;
-  // }, [isLoading]);
-
   const handleLogin = () => {
     login(email, password);
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+    <SafeAreaView style={styles.container} behavior="padding">
+      <Text style={styles.header}>Visitor Management System </Text>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
@@ -59,7 +48,7 @@ const LoginScreen = () => {
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -73,6 +62,11 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: "80%",
+  },
+  header: {
+    fontSize: 30,
+    fontFamily: "DMBold",
+    padding: 10,
   },
   input: {
     backgroundColor: "white",
