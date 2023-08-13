@@ -5,39 +5,67 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  SafeAreaView,
+  Button,
 } from "react-native";
 import React, { useState } from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
+
+import { db } from "../../../firebase";
+import { collection, addDoc } from "firebase/firestore";
+
+import Feather from "react-native-vector-icons/Feather";
 
 const RegisterNewVisitor = () => {
-  const [visitorName, setName] = useState("");
-  const [visitorIC, setIdNumber] = useState("");
-  const [visitorCarPlate, setCarPlateNumber] = useState("");
-  const [visitorTelNo, setPhoneNumber] = useState("");
-  const [visitorVisitDateTime, setVisitDate] = useState("");
-  const [visitorVisitPurpose, setVisitPurpose] = useState("");
+  const [visitorName, setVisitorName] = useState("");
+  const [visitorIC, setVisitorIC] = useState("");
+  const [visitorCarPlate, setVisitorCarPlate] = useState("");
+  const [visitorTelNo, setVisitorTelNo] = useState("");
+  const [visitorVisitDateTime, setVisitorVisitDateTime] = useState("");
+  const [visitorVisitPurpose, setVisitorVisitPurpose] = useState("");
+
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  const showTimepicker = () => {
+    showMode("time");
+  };
 
   const addVisitor = () => {
-    // const dbInstance = collection(db, "registeredVisitors");
-    // addDoc(dbInstance, {
-    //   //add visitor id according to the number of documents in the collection
-    //   visitorName: visitorName,
-    //   visitorIC: visitorIC,
-    //   visitorCarPlate: visitorCarPlate,
-    //   visitorTelNo: visitorTelNo,
-    //   visitorVisitDateTime: visitorVisitDateTime,
-    //   visitorVisitPurpose: visitorVisitPurpose,
-    // }).then(() => {
-    //   setVisitorName("");
-    //   setVisitorIC("");
-    //   setVisitorCarPlate("");
-    //   setVisitorTelNo("");
-    //   setVisitorVisitDateTime("");
-    //   setVisitorVisitPurpose("");
-
-    //   alert("Added successfully");
-    //   // router.push("/");
-    // });
-    console.log("hi");
+    const dbInstance = collection(db, "registeredVisitors");
+    addDoc(dbInstance, {
+      //add visitor id according to the number of documents in the collection
+      visitorName: visitorName,
+      visitorIC: visitorIC,
+      visitorCarPlate: visitorCarPlate,
+      visitorTelNo: visitorTelNo,
+      visitorVisitDateTime: visitorVisitDateTime,
+      visitorVisitPurpose: visitorVisitPurpose,
+    }).then(() => {
+      setVisitorName("");
+      setVisitorIC("");
+      setVisitorCarPlate("");
+      setVisitorTelNo("");
+      setVisitorVisitDateTime("");
+      setVisitorVisitPurpose("");
+      alert("Added successfully");
+    });
   };
 
   return (
@@ -50,7 +78,7 @@ const RegisterNewVisitor = () => {
             selectionColor="#007aff"
             style={styles.input}
             value={visitorName}
-            onChangeText={(text) => setName(text.toUpperCase())}
+            onChangeText={(text) => setVisitorName(text.toUpperCase())}
           />
         </View>
 
@@ -61,7 +89,7 @@ const RegisterNewVisitor = () => {
             selectionColor="#007aff"
             style={styles.input}
             value={visitorIC}
-            onChangeText={(text) => setIdNumber(text.toUpperCase())}
+            onChangeText={(text) => setVisitorIC(text.toUpperCase())}
           />
         </View>
 
@@ -72,7 +100,7 @@ const RegisterNewVisitor = () => {
             selectionColor="#007aff"
             style={styles.input}
             value={visitorCarPlate}
-            onChangeText={(text) => setCarPlateNumber(text.toUpperCase())}
+            onChangeText={(text) => setVisitorCarPlate(text.toUpperCase())}
           />
         </View>
 
@@ -83,20 +111,37 @@ const RegisterNewVisitor = () => {
             selectionColor="#007aff"
             style={styles.input}
             value={visitorTelNo}
-            onChangeText={(text) => setPhoneNumber(text.toUpperCase())}
+            onChangeText={(text) => setVisitorTelNo(text.toUpperCase())}
           />
         </View>
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Visiting Date:</Text>
-          <TextInput
-            autoCapitalize="characters"
-            selectionColor="#007aff"
-            style={styles.input}
-            value={visitorVisitDateTime}
-            onChangeText={(text) => setVisitDate(text.toUpperCase())}
-          />
+          <View style={styles.dateTimeContainer}>
+            <Text>{date.toLocaleString()}</Text>
+            <View style={styles.dateTimeIcons}>
+              <TouchableOpacity onPress={showDatepicker}>
+                <Feather name="calendar" size={30} color={"black"} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={showTimepicker}>
+                <Feather name="clock" size={30} color={"black"} />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
+
+        <SafeAreaView>
+          {show && (
+            <DateTimePicker
+              minimumDate={new Date()}
+              testID="dateTimePicker"
+              value={date}
+              mode={mode}
+              is24Hour={true}
+              onChange={onChange}
+            />
+          )}
+        </SafeAreaView>
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Visiting Purpose:</Text>
@@ -105,7 +150,7 @@ const RegisterNewVisitor = () => {
             selectionColor="#007aff"
             style={styles.input}
             value={visitorVisitPurpose}
-            onChangeText={(text) => setVisitPurpose(text.toUpperCase())}
+            onChangeText={(text) => setVisitorVisitPurpose(text.toUpperCase())}
           />
         </View>
 
@@ -131,6 +176,19 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 20,
     marginBottom: 20,
+  },
+  dateTimeContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "#cccccc",
+    padding: 10,
+  },
+  dateTimeIcons: {
+    flexDirection: "row",
+    gap: 5,
   },
   row: {
     flexDirection: "row",
