@@ -1,16 +1,16 @@
-import { Text, View } from "react-native";
-import React, { Component } from "react";
-import { Stack } from "expo-router";
+import { View, Text, Button } from "react-native";
+import React from "react";
+import { Stack, useRouter } from "expo-router";
 
-export class test extends Component {
-  render() {
-    return (
-      <View>
-        <Stack.Screen options={{ headerTitle: "" }} />
-        <Text>Test</Text>
-      </View>
-    );
-  }
-}
+const qrcode = () => {
+  const router = useRouter();
 
-export default test;
+  return (
+    <View>
+      <Text>qrcode</Text>
+      <Button title="Click me" onPress={() => router.push("/home")} />
+    </View>
+  );
+};
+
+export default qrcode;

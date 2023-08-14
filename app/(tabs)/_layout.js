@@ -76,13 +76,6 @@ export default () => {
           },
         }}
       />
-      <Tabs.Screen
-        name="qrcode"
-        options={{
-          headerShown: false,
-          href: null,
-        }}
-      />
     </Tabs>
   );
 };
