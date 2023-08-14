@@ -9,6 +9,9 @@ import {
   Button,
 } from "react-native";
 import React, { useState } from "react";
+
+import { Link } from "expo-router";
+
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { db } from "../../../firebase";
@@ -178,6 +181,9 @@ const RegisterNewVisitor = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={addVisitor}>
             <Text style={styles.buttonText}>Submit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Link href="/Register/qrcode">QR Code</Link>
           </TouchableOpacity>
         </View>
       </View>

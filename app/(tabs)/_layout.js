@@ -23,7 +23,7 @@ export default () => {
       }}
     >
       <Tabs.Screen
-        name="Home"
+        name="home"
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ focused, color }) => {
@@ -32,7 +32,7 @@ export default () => {
         }}
       />
       <Tabs.Screen
-        name="Visits"
+        name="visits"
         options={{
           tabBarLabel: "Visits",
           tabBarIcon: ({ focused, color }) => {
@@ -43,7 +43,7 @@ export default () => {
         }}
       />
       <Tabs.Screen
-        name="Register"
+        name="register"
         options={{
           tabBarLabel: "Register",
           tabBarIcon: ({ focused, color }) => {
@@ -52,7 +52,7 @@ export default () => {
         }}
       />
       <Tabs.Screen
-        name="Parcels"
+        name="parcels"
         options={{
           tabBarLabel: "Parcels",
           tabBarIcon: ({ focused, color }) => {
@@ -61,7 +61,7 @@ export default () => {
         }}
       />
       <Tabs.Screen
-        name="Profile"
+        name="profile"
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: ({ focused, color }) => {
