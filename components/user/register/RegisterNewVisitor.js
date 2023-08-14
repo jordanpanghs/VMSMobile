@@ -72,6 +72,7 @@ const RegisterNewVisitor = () => {
       visitorTelNo: visitorTelNo,
       visitorVisitDateTime: visitorVisitDateTime,
       visitorVisitPurpose: visitorVisitPurpose,
+      hasVisited: "false",
     }).then(() => {
       setVisitorName("");
       setVisitorIC("");
