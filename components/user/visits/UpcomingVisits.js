@@ -50,16 +50,19 @@ function UpcomingVisits() {
 
   return (
     <View style={styles.container}>
-      <QRCode
-        value={JSON.stringify({
-          name: item.name,
-          expiry: item.expiryDate,
-          manufacturer: item.manufacturer,
-        })}
-        getRef={(c) => setProductQRref(c)}
-      />
-      {getDataURL()}
-      <Button title="click me" onPress={() => handleShare()} />
+      <View style={styles.qrContainer}>
+        <QRCode
+          value={JSON.stringify({
+            name: item.name,
+            expiry: item.expiryDate,
+            manufacturer: item.manufacturer,
+          })}
+          size={200}
+          getRef={(c) => setProductQRref(c)}
+        />
+        {getDataURL()}
+        <Button title="Share QR Code" onPress={() => handleShare()} />
+      </View>
     </View>
   );
 }
@@ -70,6 +73,13 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
+  },
+  qrContainer: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 30,
   },
 });
 
