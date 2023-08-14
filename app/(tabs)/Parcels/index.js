@@ -1,8 +1,8 @@
 import { Text, View } from "react-native";
 import React, { Component } from "react";
 
-import ClaimedParcels from "../../components/user/parcels/ClaimedParcels";
-import UnclaimedParcels from "../../components/user/parcels/UnclaimedParcels";
+import ClaimedParcels from "../../../components/user/parcels/ClaimedParcels";
+import UnclaimedParcels from "../../../components/user/parcels/UnclaimedParcels";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 

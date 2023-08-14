@@ -1,8 +1,8 @@
 import { Text, View } from "react-native";
 import React, { Component } from "react";
 
-import UpcomingVisits from "../../components/user/visits/UpcomingVisits";
-import PastVisits from "../../components/user/visits/PastVisits";
+import UpcomingVisits from "../../../components/user/visits/UpcomingVisits";
+import PastVisits from "../../../components/user/visits/PastVisits";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 

@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import React, { Component } from "react";
 
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function Profile() {
   const { logout, currentUser } = useAuth();

@@ -9,8 +9,8 @@ import React, { Component, useState } from "react";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-import RegisterNewVisitor from "../../components/user/register/RegisterNewVisitor";
-import RegisterNewParcel from "../../components/user/register/RegisterNewParcel";
+import RegisterNewVisitor from "../../../components/user/register/RegisterNewVisitor";
+import RegisterNewParcel from "../../../components/user/register/RegisterNewParcel";
 
 const Tab = createMaterialTopTabNavigator();
 
