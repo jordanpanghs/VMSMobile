@@ -9,9 +9,6 @@ import {
   Button,
 } from "react-native";
 import React, { useState } from "react";
-
-import { Link } from "expo-router";
-
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { db } from "../../../firebase";
@@ -56,7 +53,7 @@ const RegisterNewVisitor = () => {
       visitorIC.trim() === "" ||
       visitorCarPlate.trim() === "" ||
       visitorTelNo.trim() === "" ||
-      visitorVisitDateTime.trim() === "" ||
+      visitorVisitDateTime.toISOString().trim() === "" ||
       visitorVisitPurpose.trim() === ""
     ) {
       alert("Please fill in all required fields");
@@ -72,13 +69,13 @@ const RegisterNewVisitor = () => {
       visitorTelNo: visitorTelNo,
       visitorVisitDateTime: visitorVisitDateTime,
       visitorVisitPurpose: visitorVisitPurpose,
-      hasVisited: "false",
+      hasVisited: false,
     }).then(() => {
       setVisitorName("");
       setVisitorIC("");
       setVisitorCarPlate("");
       setVisitorTelNo("");
-      setVisitorVisitDateTime("");
+      setVisitorVisitDateTime(new Date());
       setVisitorVisitPurpose("");
       alert("Added successfully");
     });
