@@ -182,9 +182,8 @@ const RegisterNewVisitor = () => {
           <TouchableOpacity style={styles.button} onPress={addVisitor}>
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Link href="/Register/qrcode">QR Code</Link>
-          </TouchableOpacity>
+
+          <Link href="/register/qrcode">QR Code</Link>
         </View>
       </View>
     </ScrollView>

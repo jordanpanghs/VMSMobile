@@ -25,6 +25,7 @@ export default () => {
       <Tabs.Screen
         name="home"
         options={{
+          headerTitle: "Home",
           tabBarLabel: "Home",
           tabBarIcon: ({ focused, color }) => {
             return <Ionicon name="home" size={30} color={color} />;
@@ -34,6 +35,7 @@ export default () => {
       <Tabs.Screen
         name="visits"
         options={{
+          headerTitle: "Visits",
           tabBarLabel: "Visits",
           tabBarIcon: ({ focused, color }) => {
             return (
@@ -45,6 +47,7 @@ export default () => {
       <Tabs.Screen
         name="register"
         options={{
+          headerTitle: "Register",
           tabBarLabel: "Register",
           tabBarIcon: ({ focused, color }) => {
             return <Feather name="plus-square" size={30} color={color} />;
@@ -54,6 +57,7 @@ export default () => {
       <Tabs.Screen
         name="parcels"
         options={{
+          headerTitle: "Parcels",
           tabBarLabel: "Parcels",
           tabBarIcon: ({ focused, color }) => {
             return <Feather name="package" size={30} color={color} />;
@@ -63,12 +67,20 @@ export default () => {
       <Tabs.Screen
         name="profile"
         options={{
+          headerTitle: "Profile",
           tabBarLabel: "Profile",
           tabBarIcon: ({ focused, color }) => {
             return (
               <MaterialCommunityIcons name="account" size={30} color={color} />
             );
           },
+        }}
+      />
+      <Tabs.Screen
+        name="qrcode"
+        options={{
+          headerShown: false,
+          href: null,
         }}
       />
     </Tabs>
