@@ -13,6 +13,14 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+import {
+  getStorage,
+  ref,
+  uploadString,
+  getDownloadURL,
+  uploadBytes,
+} from "firebase/storage";
+
 const imgDir = FileSystem.documentDirectory + "images/";
 
 const ensureDirExists = async () => {
@@ -76,12 +84,18 @@ export default function App() {
   const uploadImage = async (uri) => {
     setUploading(true);
 
-    // await FileSystem.uploadAsync("http://192.168.1.52:8888/upload.php", uri, {
-    //   httpMethod: "POST",
-    //   uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-    //   fieldName: "file",
-    // });
-    alert("Image uploaded successfully");
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const filename = uri.split("/").pop();
+    const storage = getStorage();
+    const storageRef = ref(storage, `visitorCarPlate/${filename}`);
+
+    try {
+      await uploadBytes(storageRef, blob);
+      alert("Image uploaded successfully");
+    } catch (e) {
+      console.log(e);
+    }
 
     setUploading(false);
   };
