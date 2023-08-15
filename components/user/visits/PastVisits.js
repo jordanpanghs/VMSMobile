@@ -13,6 +13,8 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+import axios from "axios";
+
 import {
   getStorage,
   ref,
@@ -33,6 +35,7 @@ const ensureDirExists = async () => {
 export default function App() {
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState([]);
+  const [fileURL, setfileURL] = useState("");
 
   // Load images on startup
   useEffect(() => {
@@ -77,18 +80,21 @@ export default function App() {
     const filename = new Date().getTime() + ".jpeg";
     const dest = imgDir + filename;
     await FileSystem.copyAsync({ from: uri, to: dest });
+    setfileURL(dest);
     setImages([...images, dest]);
   };
 
-  // Upload image to server
+  // Upload image to google fire storage
   const uploadImage = async (uri) => {
     setUploading(true);
 
     const response = await fetch(uri);
     const blob = await response.blob();
     const filename = uri.split("/").pop();
+
     const storage = getStorage();
     const storageRef = ref(storage, `visitorCarPlate/${filename}`);
+    setFileName(storageRef);
 
     try {
       await uploadBytes(storageRef, blob);
@@ -104,6 +110,45 @@ export default function App() {
   const deleteImage = async (uri) => {
     await FileSystem.deleteAsync(uri);
     setImages(images.filter((i) => i !== uri));
+  };
+
+  const detectLabels = async (fileURL) => {
+    const credentials = require("../../../visitor-management-syste-3f0f7-e8395bfdb89d.json");
+    const apiKey = credentials.private_key;
+    const url = `https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCxKvcfZcIQy42hjIwbo8jominxkAW6-J0`;
+
+    //Convert latest upload to base64 image for API call
+    const base64Data = await FileSystem.readAsStringAsync(fileURL, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    const requestBody = {
+      requests: [
+        {
+          image: {
+            content: base64Data,
+          },
+          features: [
+            {
+              type: "TEXT_DETECTION",
+              maxResults: 10,
+            },
+          ],
+        },
+      ],
+    };
+
+    try {
+      const response = await axios.post(url, requestBody);
+      const texts = response.data.responses[0].textAnnotations.map(
+        (texts) => texts.description
+      );
+      console.log(texts);
+      return texts;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
   };
 
   // Render image list item
@@ -140,6 +185,7 @@ export default function App() {
       >
         <Button title="Photo Library" onPress={() => selectImage(true)} />
         <Button title="Capture Image" onPress={() => selectImage(false)} />
+        <Button title="Click me" onPress={() => detectLabels(fileURL)}></Button>
       </View>
 
       <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "500" }}>

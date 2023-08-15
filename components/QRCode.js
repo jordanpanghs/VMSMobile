@@ -20,7 +20,7 @@ function QRCode() {
     const fileUri = FileSystem.documentDirectory + fileName;
 
     try {
-      // Write base64 string to file
+      // Write base64 encoding of the image into shareable file
       await FileSystem.writeAsStringAsync(fileUri, dataURL, {
         encoding: FileSystem.EncodingType.Base64,
       });
