@@ -66,16 +66,30 @@ function UpcomingVisits() {
               <Text style={styles.dataText}>{visitor.date}</Text>
               <Text style={styles.dataText}>{visitor.visitorVisitPurpose}</Text>
             </View>
-            <View style={styles.iconContainer}>
-              <TouchableOpacity>
-                <Ionicons name="qr-code-outline" size={30} color={"#1c1c1e"} />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Feather name="edit" size={30} color={"#1c1c1e"} />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Feather name="trash-2" size={30} color={"#1c1c1e"} />
-              </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "column",
+                alignItems: "center",
+                padding: 20,
+              }}
+            >
+              <View style={{ paddingBottom: 10 }}>
+                <TouchableOpacity>
+                  <Ionicons
+                    name="qr-code-outline"
+                    size={60}
+                    color={"#1c1c1e"}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.iconContainer}>
+                <TouchableOpacity onPress={(visitor) => showQR(visitor)}>
+                  <Feather name="edit" size={30} color={"#007AFF"} />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Feather name="trash-2" size={30} color={"red"} />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         )}
@@ -95,9 +109,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "black",
     borderRadius: 5,
+    backgroundColor: "white",
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 4.59,
+    elevation: 5,
   },
   visitorDataContainer: {
     padding: 20,
@@ -108,7 +129,6 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "row",
     gap: 10,
-    padding: 20,
   },
 });
 

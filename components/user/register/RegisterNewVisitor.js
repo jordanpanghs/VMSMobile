@@ -195,9 +195,17 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     backgroundColor: "white",
-    padding: 10,
+    padding: 15,
     borderRadius: 20,
     marginBottom: 20,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.17,
+    shadowRadius: 3.05,
+    elevation: 4,
   },
   dateTimeText: {
     fontFamily: "DMBold",
