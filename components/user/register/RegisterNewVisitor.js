@@ -67,7 +67,7 @@ const RegisterNewVisitor = () => {
       visitorIC: visitorIC,
       visitorCarPlate: visitorCarPlate,
       visitorTelNo: visitorTelNo,
-      visitorVisitDateTime: visitorVisitDateTime,
+      visitorVisitDateTime: visitorVisitDateTime.toISOString(),
       visitorVisitPurpose: visitorVisitPurpose,
       hasVisited: false,
     }).then(() => {

@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, View, Text } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import {
   collection,
   query,
@@ -10,7 +17,12 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
+
+import Feather from "react-native-vector-icons/Feather";
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 import { db } from "../../../firebase";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function UpcomingVisits() {
   const [registeredVisitorsData, setRegisteredVisitorsData] = useState([]);
@@ -26,15 +38,10 @@ function UpcomingVisits() {
   const fetchData = async () => {
     const visitorsRef = collection(db, "registeredVisitors");
     const q = query(visitorsRef);
-    // const querySnapshot = await getDocs(q);
-    // const visitorsData = querySnapshot.docs.map((doc) => ({
-    //   id: doc.id,
-    //   ...doc.data(),
-    // }));
-    // setVisitors(visitorsData);
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const updatedData = snapshot.docs.map((doc) => ({
         id: doc.id,
+        date: new Date(doc.data().visitorVisitDateTime).toLocaleString(),
         ...doc.data(),
       }));
       setRegisteredVisitorsData(updatedData);
@@ -43,19 +50,66 @@ function UpcomingVisits() {
   };
 
   return (
-    <ScrollView style={{ flex: 1, gap: 10 }}>
-      {registeredVisitorsData.map((visitor) => (
-        <View key={visitor.id} style={{ marginTop: 20 }}>
-          <Text>{visitor.visitorName}</Text>
-          <Text>{visitor.visitorIC}</Text>
-          <Text>{visitor.visitorCarPlate}</Text>
-          <Text>{visitor.visitorTelNo}</Text>
-          <Text>{visitor.visitorVisitDateTime}</Text>
-          <Text>{visitor.visitorVisitPurpose}</Text>
-        </View>
-      ))}
-    </ScrollView>
+    <View style={{ flex: 1, flexGrow: 1 }}>
+      <FlatList
+        style={styles.container}
+        data={registeredVisitorsData}
+        keyExtractor={(visitor) => visitor.id.toString()}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        renderItem={({ item: visitor }) => (
+          <View style={styles.visitorsContainer}>
+            <View style={styles.visitorDataContainer}>
+              <Text style={styles.dataText}>{visitor.visitorName}</Text>
+              <Text style={styles.dataText}>{visitor.visitorIC}</Text>
+              <Text style={styles.dataText}>{visitor.visitorCarPlate}</Text>
+              <Text style={styles.dataText}>{visitor.visitorTelNo}</Text>
+              <Text style={styles.dataText}>{visitor.date}</Text>
+              <Text style={styles.dataText}>{visitor.visitorVisitPurpose}</Text>
+            </View>
+            <View style={styles.iconContainer}>
+              <TouchableOpacity>
+                <Ionicons name="qr-code-outline" size={30} color={"#1c1c1e"} />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Feather name="edit" size={30} color={"#1c1c1e"} />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Feather name="trash-2" size={30} color={"#1c1c1e"} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+      />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 20,
+    padding: 20,
+  },
+  visitorsContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 5,
+  },
+  visitorDataContainer: {
+    padding: 20,
+  },
+  dataText: {
+    fontFamily: "DMRegular",
+  },
+  iconContainer: {
+    flexDirection: "row",
+    gap: 10,
+    padding: 20,
+  },
+});
 
 export default UpcomingVisits;
