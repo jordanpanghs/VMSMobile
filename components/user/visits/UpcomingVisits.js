@@ -7,6 +7,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Alert,
+  Modal,
+  TextInput,
 } from "react-native";
 import {
   collection,
@@ -30,7 +33,8 @@ import { useRouter } from "expo-router";
 export default function UpcomingVisits() {
   const [registeredVisitorsData, setRegisteredVisitorsData] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const router = useRouter();
 
@@ -58,6 +62,28 @@ export default function UpcomingVisits() {
     return unsubscribe;
   };
 
+  const deleteVisitor = async (visitorName, documentId) => {
+    const firstName = visitorName.split(" ").shift();
+    Alert.alert(
+      "Confirm Delete",
+      `Are you sure you want to delete ${firstName}'s visit?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            const docRef = doc(db, "registeredVisitors", documentId);
+            await deleteDoc(docRef);
+            alert("Visit deleted successfully!");
+          },
+        },
+      ]
+    );
+  };
+
   const showQR = (visitor) => {
     router.push({
       pathname: "/visits/qrcode",
@@ -70,6 +96,37 @@ export default function UpcomingVisits() {
 
   return (
     <View style={{ flex: 1, flexGrow: 1 }}>
+      {isLoading && (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: "rgba(0,0,0,0.4)",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          ]}
+        >
+          <ActivityIndicator color="#fff" animating size="large" />
+        </View>
+      )}
+
+      <Modal visible={showEditModal} animationType="slide">
+        <View style={styles.container}>
+          <Text style={styles.title}>Edit Visitor</Text>
+
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Save</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setShowEditModal(!showEditModal)}
+          >
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
       <FlatList
         style={styles.container}
         data={registeredVisitorsData}
@@ -105,7 +162,9 @@ export default function UpcomingVisits() {
                 <TouchableOpacity>
                   <Feather name="edit" size={30} color={"#007AFF"} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => deleteVisitor(visitor.visitorName, visitor.id)}
+                >
                   <Feather name="trash-2" size={30} color={"red"} />
                 </TouchableOpacity>
               </View>
@@ -114,21 +173,6 @@ export default function UpcomingVisits() {
         )}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
       />
-
-      {isLoading && (
-        <View
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              backgroundColor: "rgba(0,0,0,0.4)",
-              alignItems: "center",
-              justifyContent: "center",
-            },
-          ]}
-        >
-          <ActivityIndicator color="#fff" animating size="large" />
-        </View>
-      )}
     </View>
   );
 }
