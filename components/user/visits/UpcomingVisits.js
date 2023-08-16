@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import {
   collection,
@@ -24,21 +25,28 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { db } from "../../../firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-function UpcomingVisits() {
+import { useRouter } from "expo-router";
+
+export default function UpcomingVisits() {
   const [registeredVisitorsData, setRegisteredVisitorsData] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!isDataFetched) {
+      setIsLoading(true);
       fetchData();
       setIsDataFetched(true);
+      setIsLoading(false);
     }
   }, [isDataFetched]);
 
   const fetchData = async () => {
     const visitorsRef = collection(db, "registeredVisitors");
     const q = query(visitorsRef);
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = await onSnapshot(q, (snapshot) => {
       const updatedData = snapshot.docs.map((doc) => ({
         id: doc.id,
         date: new Date(doc.data().visitorVisitDateTime).toLocaleString(),
@@ -46,7 +54,18 @@ function UpcomingVisits() {
       }));
       setRegisteredVisitorsData(updatedData);
     });
+
     return unsubscribe;
+  };
+
+  const showQR = (visitor) => {
+    router.push({
+      pathname: "/visits/qrcode",
+      params: {
+        documentID: visitor.id,
+        visitorName: visitor.visitorName,
+      },
+    });
   };
 
   return (
@@ -74,7 +93,7 @@ function UpcomingVisits() {
               }}
             >
               <View style={{ paddingBottom: 10 }}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => showQR(visitor)}>
                   <Ionicons
                     name="qr-code-outline"
                     size={60}
@@ -83,7 +102,7 @@ function UpcomingVisits() {
                 </TouchableOpacity>
               </View>
               <View style={styles.iconContainer}>
-                <TouchableOpacity onPress={(visitor) => showQR(visitor)}>
+                <TouchableOpacity>
                   <Feather name="edit" size={30} color={"#007AFF"} />
                 </TouchableOpacity>
                 <TouchableOpacity>
@@ -95,6 +114,21 @@ function UpcomingVisits() {
         )}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
       />
+
+      {isLoading && (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: "rgba(0,0,0,0.4)",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          ]}
+        >
+          <ActivityIndicator color="#fff" animating size="large" />
+        </View>
+      )}
     </View>
   );
 }
@@ -131,5 +165,3 @@ const styles = StyleSheet.create({
     gap: 10,
   },
 });
-
-export default UpcomingVisits;
