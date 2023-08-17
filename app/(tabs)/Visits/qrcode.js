@@ -49,7 +49,12 @@ export default function showQRCode() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ headerTitle: `QR Code for ${visitorName}` }} />
+      <Stack.Screen
+        options={{
+          headerTitle: `QR Code for ${visitorName}`,
+          animation: "slide_from_right",
+        }}
+      />
       <View style={styles.qrContainer}>
         <QRCode
           value={JSON.stringify(documentID)}

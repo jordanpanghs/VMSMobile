@@ -8,7 +8,6 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
-  Modal,
   TextInput,
 } from "react-native";
 import {
@@ -35,7 +34,6 @@ export default function UpcomingVisits() {
   const [registeredVisitorsData, setRegisteredVisitorsData] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [showEditModal, setShowEditModal] = useState(false);
 
   const router = useRouter();
 
@@ -65,7 +63,25 @@ export default function UpcomingVisits() {
     }
   };
 
-  const deleteVisitor = async (visitorName, documentId) => {
+  const handleEditVisitor = async (visitor) => {
+    console.log(visitor);
+  };
+
+  // const handleUpdateVisitor = async (selectedDocument) => {
+  //   const docRef = doc(db, "registeredVisitors", selectedDocument.id);
+  //   await updateDoc(docRef, {
+  //     visitorName: selectedDocument.name,
+  //     visitorIC: selectedDocument.identityCardNum,
+  //     visitorCarPlate: selectedDocument.carPlateNum,
+  //     visitorTelNo: selectedDocument.telephoneNum,
+  //     visitorVisitDateTime: date.toJSON(),
+  //     visitorVisitedUnit: selectedDocument.visitedUnit,
+  //     visitorVisitPurpose: selectedDocument.visitingPurpose,
+  //   });
+  //   alert("Visit updated successfully!");
+  // };
+
+  const handleDeleteVisitor = async (visitorName, documentId) => {
     const firstName = visitorName.split(" ").shift();
     Alert.alert(
       "Confirm Delete",
@@ -114,22 +130,6 @@ export default function UpcomingVisits() {
         </View>
       )}
 
-      <Modal visible={showEditModal} animationType="slide">
-        <View style={styles.container}>
-          <Text style={styles.title}>Edit Visitor</Text>
-
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => setShowEditModal(!showEditModal)}
-          >
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-
       {isDataFetched && registeredVisitorsData.length === 0 && (
         <View style={styles.noDataContainer}>
           <Text style={styles.noDataText}>No registered visitors found.</Text>
@@ -177,12 +177,12 @@ export default function UpcomingVisits() {
                   </TouchableOpacity>
                 </View>
                 <View style={styles.iconContainer}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleEditVisitor(visitor)}>
                     <Feather name="edit" size={30} color={"#007AFF"} />
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() =>
-                      deleteVisitor(visitor.visitorName, visitor.id)
+                      handleDeleteVisitor(visitor.visitorName, visitor.id)
                     }
                   >
                     <Feather name="trash-2" size={30} color={"red"} />

@@ -5,6 +5,7 @@ const VisitsScreenLayout = () => {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="qrcode" />
+      <Stack.Screen name="editvisitor" />
     </Stack>
   );
 };
