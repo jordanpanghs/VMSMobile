@@ -24,6 +24,7 @@ import {
 
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { db } from "../../../firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -40,26 +41,28 @@ export default function UpcomingVisits() {
 
   useEffect(() => {
     if (!isDataFetched) {
-      setIsLoading(true);
       fetchData();
-      setIsDataFetched(true);
-      setIsLoading(false);
     }
   }, [isDataFetched]);
 
   const fetchData = async () => {
-    const visitorsRef = collection(db, "registeredVisitors");
-    const q = query(visitorsRef);
-    const unsubscribe = await onSnapshot(q, (snapshot) => {
-      const updatedData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        date: new Date(doc.data().visitorVisitDateTime).toLocaleString(),
-        ...doc.data(),
-      }));
-      setRegisteredVisitorsData(updatedData);
-    });
-
-    return unsubscribe;
+    try {
+      const visitorsRef = collection(db, "registeredVisitors");
+      const q = query(visitorsRef, where("hasVisited", "==", false));
+      const unsubscribe = await onSnapshot(q, (snapshot) => {
+        const updatedData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          date: new Date(doc.data().visitorVisitDateTime).toLocaleString(),
+          ...doc.data(),
+        }));
+        setRegisteredVisitorsData(updatedData);
+        setIsLoading(false);
+        setIsDataFetched(true);
+      });
+      return unsubscribe;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const deleteVisitor = async (visitorName, documentId) => {
@@ -127,52 +130,70 @@ export default function UpcomingVisits() {
         </View>
       </Modal>
 
-      <FlatList
-        style={styles.container}
-        data={registeredVisitorsData}
-        keyExtractor={(visitor) => visitor.id.toString()}
-        contentContainerStyle={{ paddingBottom: 40 }}
-        renderItem={({ item: visitor }) => (
-          <View style={styles.visitorsContainer}>
-            <View style={styles.visitorDataContainer}>
-              <Text style={styles.dataText}>{visitor.visitorName}</Text>
-              <Text style={styles.dataText}>{visitor.visitorIC}</Text>
-              <Text style={styles.dataText}>{visitor.visitorCarPlate}</Text>
-              <Text style={styles.dataText}>{visitor.visitorTelNo}</Text>
-              <Text style={styles.dataText}>{visitor.date}</Text>
-              <Text style={styles.dataText}>{visitor.visitorVisitPurpose}</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "column",
-                alignItems: "center",
-                padding: 20,
-              }}
-            >
-              <View style={{ paddingBottom: 10 }}>
-                <TouchableOpacity onPress={() => showQR(visitor)}>
-                  <Ionicons
-                    name="qr-code-outline"
-                    size={60}
-                    color={"#1c1c1e"}
-                  />
-                </TouchableOpacity>
+      {isDataFetched && registeredVisitorsData.length === 0 && (
+        <View style={styles.noDataContainer}>
+          <Text style={styles.noDataText}>No registered visitors found.</Text>
+          <Text style={styles.noDataText}>Register a new one!</Text>
+          <MaterialCommunityIcons
+            name="note-remove-outline"
+            size={130}
+            color={"black"}
+          />
+        </View>
+      )}
+
+      {!isLoading && registeredVisitorsData.length > 0 && (
+        <FlatList
+          style={styles.container}
+          data={registeredVisitorsData}
+          keyExtractor={(visitor) => visitor.id.toString()}
+          contentContainerStyle={{ paddingBottom: 40 }}
+          renderItem={({ item: visitor }) => (
+            <View style={styles.visitorsContainer}>
+              <View style={styles.visitorDataContainer}>
+                <Text style={styles.dataText}>{visitor.visitorName}</Text>
+                <Text style={styles.dataText}>{visitor.visitorIC}</Text>
+                <Text style={styles.dataText}>{visitor.visitorCarPlate}</Text>
+                <Text style={styles.dataText}>{visitor.visitorTelNo}</Text>
+                <Text style={styles.dataText}>{visitor.date}</Text>
+                <Text style={styles.dataText}>
+                  {visitor.visitorVisitPurpose}
+                </Text>
               </View>
-              <View style={styles.iconContainer}>
-                <TouchableOpacity>
-                  <Feather name="edit" size={30} color={"#007AFF"} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => deleteVisitor(visitor.visitorName, visitor.id)}
-                >
-                  <Feather name="trash-2" size={30} color={"red"} />
-                </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: 20,
+                }}
+              >
+                <View style={{ paddingBottom: 10 }}>
+                  <TouchableOpacity onPress={() => showQR(visitor)}>
+                    <Ionicons
+                      name="qr-code-outline"
+                      size={60}
+                      color={"#1c1c1e"}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.iconContainer}>
+                  <TouchableOpacity>
+                    <Feather name="edit" size={30} color={"#007AFF"} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      deleteVisitor(visitor.visitorName, visitor.id)
+                    }
+                  >
+                    <Feather name="trash-2" size={30} color={"red"} />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-        )}
-        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-      />
+          )}
+          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+        />
+      )}
     </View>
   );
 }
@@ -207,5 +228,18 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "row",
     gap: 10,
+  },
+  noDataContainer: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: 0.2,
+    padding: 20,
+    gap: 5,
+  },
+  noDataText: {
+    fontFamily: "DMRegular",
+    fontSize: 25,
   },
 });
