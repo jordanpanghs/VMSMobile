@@ -64,22 +64,19 @@ export default function UpcomingVisits() {
   };
 
   const handleEditVisitor = async (visitor) => {
-    console.log(visitor);
+    router.push({
+      pathname: "/visits/editvisitor",
+      params: {
+        documentID: visitor.id,
+        visitorName: visitor.visitorName,
+        visitorIC: visitor.visitorIC,
+        visitorCarPlate: visitor.visitorCarPlate,
+        visitorTelNo: visitor.visitorTelNo,
+        visitorVisitDateTime: visitor.visitorVisitDateTime,
+        visitorVisitPurpose: visitor.visitorVisitPurpose,
+      },
+    });
   };
-
-  // const handleUpdateVisitor = async (selectedDocument) => {
-  //   const docRef = doc(db, "registeredVisitors", selectedDocument.id);
-  //   await updateDoc(docRef, {
-  //     visitorName: selectedDocument.name,
-  //     visitorIC: selectedDocument.identityCardNum,
-  //     visitorCarPlate: selectedDocument.carPlateNum,
-  //     visitorTelNo: selectedDocument.telephoneNum,
-  //     visitorVisitDateTime: date.toJSON(),
-  //     visitorVisitedUnit: selectedDocument.visitedUnit,
-  //     visitorVisitPurpose: selectedDocument.visitingPurpose,
-  //   });
-  //   alert("Visit updated successfully!");
-  // };
 
   const handleDeleteVisitor = async (visitorName, documentId) => {
     const firstName = visitorName.split(" ").shift();
@@ -103,7 +100,7 @@ export default function UpcomingVisits() {
     );
   };
 
-  const showQR = (visitor) => {
+  const handleShowQR = (visitor) => {
     router.push({
       pathname: "/visits/qrcode",
       params: {
@@ -168,7 +165,7 @@ export default function UpcomingVisits() {
                 }}
               >
                 <View style={{ paddingBottom: 10 }}>
-                  <TouchableOpacity onPress={() => showQR(visitor)}>
+                  <TouchableOpacity onPress={() => handleShowQR(visitor)}>
                     <Ionicons
                       name="qr-code-outline"
                       size={60}
