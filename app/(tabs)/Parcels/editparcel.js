@@ -11,44 +11,48 @@ import {
 import React, { useState } from "react";
 
 import { db } from "../../../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
-function RegisterNewParcel() {
-  const [parcelReceiverName, setParcelReceiverName] = useState("");
-  const [parcelReceiverTelNo, setParcelReceiverTelNo] = useState("");
-  const [parcelReceiverUnit, setParcelReceiverUnit] = useState("");
-  const [parcelTrackingNumber, setParcelTrackingNumber] = useState("");
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 
-  const addParcel = () => {
-    if (
-      parcelReceiverName.trim() === "" ||
-      parcelReceiverTelNo.trim() === "" ||
-      parcelReceiverUnit.trim() === "" ||
-      parcelTrackingNumber.trim() === ""
-    ) {
-      alert("Please fill in all required fields");
-      return;
-    }
+const EditVisitor = () => {
+  const router = useRouter();
+  //Initialize the visitor info from the UpcomingVisits.js to hooks
+  const params = useLocalSearchParams();
 
-    const dbInstance = collection(db, "registeredParcels");
-    addDoc(dbInstance, {
+  const [parcelReceiverName, setParcelReceiverName] = useState(
+    params.parcelReceiverName
+  );
+  const [parcelReceiverTelNo, setParcelReceiverTelNo] = useState(
+    params.parcelReceiverTelNo
+  );
+  const [parcelTrackingNumber, setParcelTrackingNumber] = useState(
+    params.parcelTrackingNumber
+  );
+  const [parcelReceiverUnit, setParcelReceiverUnit] = useState(
+    params.parcelReceiverUnit
+  );
+
+  const handleUpdateParcel = async () => {
+    const docRef = doc(db, "registeredParcels", params.documentID);
+    await updateDoc(docRef, {
       parcelReceiverName: parcelReceiverName,
       parcelReceiverTelNo: parcelReceiverTelNo,
-      parcelReceiverUnit: parcelReceiverUnit,
       parcelTrackingNumber: parcelTrackingNumber,
-      isClaimed: false,
-      hasArrived: false,
-    }).then(() => {
-      setParcelReceiverName("");
-      setParcelReceiverTelNo("");
-      setParcelReceiverUnit("");
-      setParcelTrackingNumber("");
-      alert("Added successfully");
+      parcelReceiverUnit: parcelReceiverUnit,
     });
+    alert("Visit updated successfully!");
+    router.back();
   };
 
   return (
     <ScrollView>
+      <Stack.Screen
+        options={{
+          headerTitle: "Edit Parcel Info",
+          animation: "slide_from_bottom",
+        }}
+      />
       <View style={styles.container}>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Receiver Name</Text>
@@ -94,14 +98,14 @@ function RegisterNewParcel() {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={addParcel}>
+          <TouchableOpacity style={styles.button} onPress={handleUpdateParcel}>
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -112,7 +116,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     backgroundColor: "white",
-    padding: 10,
+    padding: 15,
     borderRadius: 20,
     marginBottom: 20,
     shadowColor: "#000000",
@@ -178,4 +182,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterNewParcel;
+export default EditVisitor;

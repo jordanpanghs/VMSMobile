@@ -4,13 +4,11 @@ import QRCode from "react-native-qrcode-svg";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
-export default function showVisitorQRCode() {
+export default function showParcelQRCode() {
   //Retrieve the document id from params passed in from upcomingvisits.js
   const searchParams = useLocalSearchParams();
   const documentID = searchParams.documentID;
-  const visitorName = searchParams.visitorName.split(" ").shift();
 
   const [productQRref, setProductQRref] = useState();
   const [dataURL, setDataURL] = useState(); //Base64 string of the QR Code image
@@ -51,20 +49,20 @@ export default function showVisitorQRCode() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          headerTitle: `QR Code for ${visitorName}`,
+          headerTitle: `Parcel QR Code`,
           animation: "slide_from_right",
         }}
       />
       <View style={styles.qrContainer}>
+        <Text style={styles.instructionText}>
+          Show this to the security guard to claim your parcel
+        </Text>
         <QRCode
           value={JSON.stringify(documentID)}
           size={300}
           getRef={(c) => setProductQRref(c)}
         />
         {getDataURL()}
-        <TouchableOpacity style={styles.button} onPress={handleShare}>
-          <Text style={styles.buttonText}>Share QR</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -76,6 +74,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
+    padding: 20,
   },
   qrContainer: {
     flex: 1,
@@ -95,5 +94,9 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 22,
     fontFamily: "DMBold",
+  },
+  instructionText: {
+    fontFamily: "DMRegular",
+    fontSize: 25,
   },
 });
