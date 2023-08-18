@@ -1,4 +1,4 @@
-# Mobile Application for Visitor Management System written in Expo
+# Visitor Management System written in Expo
 
 ## 🚀 How to run the program
 
