@@ -22,7 +22,6 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { db } from "../../../firebase";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useRouter } from "expo-router";
 
