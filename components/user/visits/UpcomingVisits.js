@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  ScrollView,
   View,
   Text,
   FlatList,
@@ -8,16 +7,13 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
-  TextInput,
 } from "react-native";
 import {
   collection,
   query,
   where,
-  getDocs,
   doc,
   onSnapshot,
-  updateDoc,
   deleteDoc,
 } from "firebase/firestore";
 
