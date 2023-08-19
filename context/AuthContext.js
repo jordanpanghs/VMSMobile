@@ -38,7 +38,7 @@ function useProtectedRoute(user) {
       router.replace("/Login");
     } else if (user && inAuthGroup) {
       // Redirect away from the sign-in page.
-      router.replace("/Home");
+      router.replace("/home");
     }
   }, [user, segments]);
 }
@@ -48,13 +48,17 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  //To unsubscribe from all snapshot listeners when the user logouts
+  const unsubscribeFunctions = useRef([]);
+
   function login(email, password) {
     return signInWithEmailAndPassword(auth, email, password);
   }
 
   function logout() {
-    signOut(auth);
-    return router.replace("/Login");
+    console.log(unsubscribeFunctions);
+    // signOut(auth);
+    // return router.replace("/Login");
   }
 
   useEffect(() => {
@@ -62,13 +66,17 @@ export function AuthProvider({ children }) {
       setCurrentUser(user);
       setLoading(false);
     });
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+      unsubscribeFunctions.current.forEach((unsubscribe) => unsubscribe());
+    };
   }, []);
 
   const value = {
     currentUser,
     login,
     logout,
+    unsubscribeFunctions: unsubscribeFunctions.current,
   };
 
   useProtectedRoute(currentUser);

@@ -51,16 +51,22 @@ export default function UpcomingVisits() {
         userRegisteredVisitorsRef,
         where("hasVisited", "==", false)
       );
-      const unsubscribe = await onSnapshot(q, (snapshot) => {
-        const updatedData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          date: new Date(doc.data().visitorVisitDateTime).toLocaleString(),
-          ...doc.data(),
-        }));
-        setRegisteredVisitorsData(updatedData);
-        setIsLoading(false);
-        setIsDataFetched(true);
-      });
+      const unsubscribe = await onSnapshot(
+        q,
+        (snapshot) => {
+          const updatedData = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            date: new Date(doc.data().visitorVisitDateTime).toLocaleString(),
+            ...doc.data(),
+          }));
+          setRegisteredVisitorsData(updatedData);
+          setIsLoading(false);
+          setIsDataFetched(true);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
       return unsubscribe;
     } catch (error) {
       console.log(error);

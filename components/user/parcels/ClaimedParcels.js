@@ -48,15 +48,21 @@ export default function ClaimedParcels() {
         "userRegisteredParcels"
       );
       const q = query(userRegisteredParcelsRef, where("isClaimed", "==", true));
-      const unsubscribe = await onSnapshot(q, (snapshot) => {
-        const updatedData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setRegisteredParcelsData(updatedData);
-        setIsLoading(false);
-        setIsDataFetched(true);
-      });
+      const unsubscribe = await onSnapshot(
+        q,
+        (snapshot) => {
+          const updatedData = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setRegisteredParcelsData(updatedData);
+          setIsLoading(false);
+          setIsDataFetched(true);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
       return unsubscribe;
     } catch (error) {
       console.log(error);
