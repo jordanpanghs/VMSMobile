@@ -12,7 +12,8 @@ import React, { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { db } from "../../../firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, collection } from "firebase/firestore";
+import { useAuth } from "../../../context/AuthContext";
 
 import Feather from "react-native-vector-icons/Feather";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -39,6 +40,10 @@ const EditVisitor = () => {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { currentUser } = useAuth();
+
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
@@ -60,17 +65,44 @@ const EditVisitor = () => {
   };
 
   const handleUpdateVisitor = async () => {
-    const docRef = doc(db, "registeredVisitors", params.documentID);
-    await updateDoc(docRef, {
-      visitorName: visitorName,
-      visitorIC: visitorIC,
-      visitorCarPlate: visitorCarPlate,
-      visitorTelNo: visitorTelNo,
-      visitorVisitDateTime: visitorVisitDateTime.toJSON(),
-      visitorVisitPurpose: visitorVisitPurpose,
-    });
-    alert("Visit updated successfully!");
-    router.back();
+    setIsLoading(true);
+
+    const userDocRef = doc(db, "users", currentUser.uid);
+    const userRegisteredVisitorsRef = collection(
+      userDocRef,
+      "userRegisteredVisitors"
+    );
+    const visitorDocRef = doc(userRegisteredVisitorsRef, params.documentID);
+
+    if (
+      visitorName.trim() === "" ||
+      visitorIC.trim() === "" ||
+      visitorCarPlate.trim() === "" ||
+      visitorTelNo.trim() === "" ||
+      visitorVisitDateTime.toISOString().trim() === "" ||
+      visitorVisitPurpose.trim() === ""
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      await updateDoc(visitorDocRef, {
+        visitorName: visitorName,
+        visitorIC: visitorIC,
+        visitorCarPlate: visitorCarPlate,
+        visitorTelNo: visitorTelNo,
+        visitorVisitDateTime: visitorVisitDateTime.toJSON(),
+        visitorVisitPurpose: visitorVisitPurpose,
+      });
+      alert("Visit updated successfully!");
+      router.back();
+    } catch (error) {
+      console.log(error);
+      alert(`Failed to update visit: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -177,7 +209,11 @@ const EditVisitor = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleUpdateVisitor}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleUpdateVisitor}
+            disabled={isLoading}
+          >
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
         </View>

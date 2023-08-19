@@ -22,7 +22,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { db } from "../../../firebase";
-
+import { useAuth } from "../../../context/AuthContext";
 import { useRouter } from "expo-router";
 
 export default function UpcomingVisits() {
@@ -32,6 +32,8 @@ export default function UpcomingVisits() {
 
   const router = useRouter();
 
+  const { currentUser } = useAuth();
+
   useEffect(() => {
     if (!isDataFetched) {
       fetchData();
@@ -40,8 +42,15 @@ export default function UpcomingVisits() {
 
   const fetchData = async () => {
     try {
-      const visitorsRef = collection(db, "registeredVisitors");
-      const q = query(visitorsRef, where("hasVisited", "==", false));
+      const userDocRef = doc(db, "users", currentUser.uid);
+      const userRegisteredVisitorsRef = collection(
+        userDocRef,
+        "userRegisteredVisitors"
+      );
+      const q = query(
+        userRegisteredVisitorsRef,
+        where("hasVisited", "==", false)
+      );
       const unsubscribe = await onSnapshot(q, (snapshot) => {
         const updatedData = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -86,8 +95,13 @@ export default function UpcomingVisits() {
         {
           text: "OK",
           onPress: async () => {
-            const docRef = doc(db, "registeredVisitors", documentId);
-            await deleteDoc(docRef);
+            const userDocRef = doc(db, "users", currentUser.uid);
+            const userRegisteredVisitorsRef = collection(
+              userDocRef,
+              "userRegisteredVisitors"
+            );
+            const visitorDocRef = doc(userRegisteredVisitorsRef, documentId);
+            await deleteDoc(visitorDocRef);
             alert("Visit deleted successfully!");
           },
         },

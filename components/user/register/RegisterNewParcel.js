@@ -11,13 +11,17 @@ import {
 import React, { useState } from "react";
 
 import { db } from "../../../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc } from "firebase/firestore";
+
+import { useAuth } from "../../../context/AuthContext";
 
 function RegisterNewParcel() {
   const [parcelReceiverName, setParcelReceiverName] = useState("");
   const [parcelReceiverTelNo, setParcelReceiverTelNo] = useState("");
   const [parcelReceiverUnit, setParcelReceiverUnit] = useState("");
   const [parcelTrackingNumber, setParcelTrackingNumber] = useState("");
+
+  const { currentUser } = useAuth();
 
   const addParcel = () => {
     if (
@@ -30,8 +34,13 @@ function RegisterNewParcel() {
       return;
     }
 
-    const dbInstance = collection(db, "registeredParcels");
-    addDoc(dbInstance, {
+    const userDocRef = doc(db, "users", currentUser.uid);
+    const userRegisteredParcelsRef = collection(
+      userDocRef,
+      "userRegisteredParcels"
+    );
+
+    addDoc(userRegisteredParcelsRef, {
       parcelReceiverName: parcelReceiverName,
       parcelReceiverTelNo: parcelReceiverTelNo,
       parcelReceiverUnit: parcelReceiverUnit,
@@ -53,6 +62,7 @@ function RegisterNewParcel() {
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Receiver Name</Text>
           <TextInput
+            autoCapitalize="characters"
             selectionColor="#007aff"
             style={styles.input}
             value={parcelReceiverName}
@@ -78,6 +88,7 @@ function RegisterNewParcel() {
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Parcel Tracking Number</Text>
           <TextInput
+            autoCapitalize="characters"
             selectionColor="#007aff"
             style={styles.input}
             value={parcelTrackingNumber}

@@ -11,7 +11,7 @@ export default function Profile() {
   }
 
   function handlePress() {
-    console.log(currentUser);
+    console.log(currentUser.uid);
   }
 
   return (

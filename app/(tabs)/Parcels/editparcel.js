@@ -11,7 +11,8 @@ import {
 import React, { useState } from "react";
 
 import { db } from "../../../firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, collection } from "firebase/firestore";
+import { useAuth } from "../../../context/AuthContext";
 
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 
@@ -33,16 +34,45 @@ const EditVisitor = () => {
     params.parcelReceiverUnit
   );
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { currentUser } = useAuth();
+
   const handleUpdateParcel = async () => {
-    const docRef = doc(db, "registeredParcels", params.documentID);
-    await updateDoc(docRef, {
-      parcelReceiverName: parcelReceiverName,
-      parcelReceiverTelNo: parcelReceiverTelNo,
-      parcelTrackingNumber: parcelTrackingNumber,
-      parcelReceiverUnit: parcelReceiverUnit,
-    });
-    alert("Visit updated successfully!");
-    router.back();
+    setIsLoading(true);
+
+    if (
+      parcelReceiverName.trim() === "" ||
+      parcelReceiverTelNo.trim() === "" ||
+      parcelTrackingNumber.trim() === "" ||
+      parcelReceiverUnit.trim() === ""
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      const userDocRef = doc(db, "users", currentUser.uid);
+      const userRegisteredParcelsRef = collection(
+        userDocRef,
+        "userRegisteredParcels"
+      );
+      const parcelDocRef = doc(userRegisteredParcelsRef, params.documentID);
+
+      await updateDoc(parcelDocRef, {
+        parcelReceiverName: parcelReceiverName,
+        parcelReceiverTelNo: parcelReceiverTelNo,
+        parcelTrackingNumber: parcelTrackingNumber,
+        parcelReceiverUnit: parcelReceiverUnit,
+      });
+      alert("Parcel updated successfully!");
+      router.back();
+    } catch (error) {
+      console.log(error);
+      alert(`Failed to update parcel: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -98,7 +128,11 @@ const EditVisitor = () => {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleUpdateParcel}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleUpdateParcel}
+            disabled={isLoading}
+          >
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
         </View>

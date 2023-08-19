@@ -12,9 +12,11 @@ import React, { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { db } from "../../../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc } from "firebase/firestore";
 
 import Feather from "react-native-vector-icons/Feather";
+
+import { useAuth } from "../../../context/AuthContext";
 
 const RegisterNewVisitor = () => {
   const [visitorName, setVisitorName] = useState("");
@@ -26,6 +28,8 @@ const RegisterNewVisitor = () => {
 
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+
+  const { currentUser } = useAuth();
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
@@ -60,8 +64,13 @@ const RegisterNewVisitor = () => {
       return;
     }
 
-    const dbInstance = collection(db, "registeredVisitors");
-    addDoc(dbInstance, {
+    const userDocRef = doc(db, "users", currentUser.uid);
+    const userRegisteredVisitorsRef = collection(
+      userDocRef,
+      "userRegisteredVisitors"
+    );
+
+    addDoc(userRegisteredVisitorsRef, {
       //add visitor id according to the number of documents in the collection
       visitorName: visitorName,
       visitorIC: visitorIC,

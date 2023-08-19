@@ -22,13 +22,15 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { db } from "../../../firebase";
-
+import { useAuth } from "../../../context/AuthContext";
 import { useRouter } from "expo-router";
 
 export default function UnclaimedParcels() {
   const [registeredParcelsData, setRegisteredParcelsData] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { currentUser } = useAuth();
 
   const router = useRouter();
 
@@ -40,8 +42,15 @@ export default function UnclaimedParcels() {
 
   const fetchData = async () => {
     try {
-      const parcelsRef = collection(db, "registeredParcels");
-      const q = query(parcelsRef, where("isClaimed", "==", false));
+      const userDocRef = doc(db, "users", currentUser.uid);
+      const userRegisteredParcelsRef = collection(
+        userDocRef,
+        "userRegisteredParcels"
+      );
+      const q = query(
+        userRegisteredParcelsRef,
+        where("isClaimed", "==", false)
+      );
       const unsubscribe = await onSnapshot(q, (snapshot) => {
         const updatedData = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -65,6 +74,7 @@ export default function UnclaimedParcels() {
         parcelReceiverName: parcel.parcelReceiverName,
         parcelReceiverTelNo: parcel.parcelReceiverTelNo,
         parcelTrackingNumber: parcel.parcelTrackingNumber,
+        parcelReceiverUnit: parcel.parcelReceiverUnit,
       },
     });
   };
@@ -81,8 +91,13 @@ export default function UnclaimedParcels() {
         {
           text: "OK",
           onPress: async () => {
-            const docRef = doc(db, "registeredParcels", documentId);
-            await deleteDoc(docRef);
+            const userDocRef = doc(db, "users", currentUser.uid);
+            const userRegisteredParcelsRef = collection(
+              userDocRef,
+              "userRegisteredParcels"
+            );
+            const parcelDocRef = doc(userRegisteredParcelsRef, documentId);
+            await deleteDoc(parcelDocRef);
             alert("Parcel deleted successfully!");
           },
         },
@@ -118,8 +133,8 @@ export default function UnclaimedParcels() {
 
       {isDataFetched && registeredParcelsData.length === 0 && (
         <View style={styles.noDataContainer}>
-          <Text style={styles.noDataText}>No registered parcels found.</Text>
-          <Text style={styles.noDataText}>Register a new one!</Text>
+          <Text style={styles.noParcelText}>No registered parcels found.</Text>
+          <Text style={styles.noParcelText}>Register a new one!</Text>
           <MaterialCommunityIcons
             name="archive-off-outline"
             size={130}
@@ -145,16 +160,35 @@ export default function UnclaimedParcels() {
                 <Text style={styles.dataText}>
                   {parcel.parcelTrackingNumber}
                 </Text>
-                <Text
-                  style={[
-                    styles.parcelStatus,
-                    parcel.hasArrived
-                      ? styles.parcelReceived
-                      : styles.parcelNotReceived,
-                  ]}
-                >
-                  {parcel.hasArrived ? "Ready to Collect" : "Awaiting Delivery"}
-                </Text>
+                <View>
+                  <TouchableOpacity
+                    style={styles.parcelStatusContainer}
+                    onPress={() => handleEditParcel(parcel)}
+                    disabled={!parcel.hasArrived}
+                  >
+                    <Text
+                      style={[
+                        styles.parcelStatus,
+                        parcel.hasArrived
+                          ? styles.parcelReceived
+                          : styles.parcelNotReceived,
+                      ]}
+                    >
+                      {parcel.hasArrived
+                        ? "Ready to Collect"
+                        : "Awaiting Delivery"}
+                    </Text>
+                    <View>
+                      {parcel.hasArrived && (
+                        <Feather
+                          name="external-link"
+                          size={25}
+                          color={"green"}
+                        />
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
               <View
                 style={{
@@ -163,15 +197,17 @@ export default function UnclaimedParcels() {
                   padding: 20,
                 }}
               >
-                <View style={{ paddingBottom: 10 }}>
-                  <TouchableOpacity onPress={() => handleShowQR(parcel)}>
-                    <Ionicons
-                      name="qr-code-outline"
-                      size={60}
-                      color={"#1c1c1e"}
-                    />
-                  </TouchableOpacity>
-                </View>
+                {parcel.hasArrived && (
+                  <View style={{ paddingBottom: 10 }}>
+                    <TouchableOpacity onPress={() => handleShowQR(parcel)}>
+                      <Ionicons
+                        name="qr-code-outline"
+                        size={60}
+                        color={"#1c1c1e"}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
                 <View style={styles.iconContainer}>
                   <TouchableOpacity onPress={() => handleEditParcel(parcel)}>
                     <Feather name="edit" size={30} color={"#007AFF"} />
@@ -232,13 +268,20 @@ const styles = StyleSheet.create({
     padding: 20,
     gap: 5,
   },
-  noDataText: {
+  noParcelText: {
     fontFamily: "DMRegular",
     fontSize: 25,
   },
+  parcelStatusContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    paddingTop: 20,
+  },
   parcelStatus: {
+    fontSize: 15,
     fontFamily: "DMBold",
   },
-  parcelReceived: { color: "green" },
-  parcelNotReceived: { color: "blue" },
+  parcelReceived: { color: "#65ad65" },
+  parcelNotReceived: { color: "#007AFF" },
 });
