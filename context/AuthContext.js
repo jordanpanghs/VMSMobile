@@ -45,8 +45,32 @@ function useProtectedRoute(user) {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userIsSecurity, setUserIsSecurity] = useState(null);
+  const [userResidentUnit, setUserResidentUnit] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setCurrentUser(user);
+      setLoading(false);
+
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setUserIsSecurity(userData.isSecurity);
+          setUserResidentUnit(userData.residentUnit);
+        }
+      } else {
+        setUserIsSecurity(false);
+        setUserResidentUnit(null);
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   function login(email, password) {
     return signInWithEmailAndPassword(auth, email, password);
@@ -57,16 +81,10 @@ export function AuthProvider({ children }) {
     return router.replace("/Login");
   }
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
-    return unsubscribe;
-  }, []);
-
   const value = {
     currentUser,
+    userIsSecurity,
+    userResidentUnit,
     login,
     logout,
   };

@@ -12,6 +12,11 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import RegisterNewVisitor from "../../../components/user/register/RegisterNewVisitor";
 import RegisterNewParcel from "../../../components/user/register/RegisterNewParcel";
 
+import RegisterVisitor from "../../../components/security/register/RegisterVisitor";
+import RegisterParcel from "../../../components/security/register/RegisterParcel";
+
+import { useAuth } from "../../../context/AuthContext";
+
 const Tab = createMaterialTopTabNavigator();
 
 function RegisterVisitorScreen() {
@@ -23,10 +28,22 @@ function RegisterParcelScreen() {
 }
 
 export default function Home() {
+  const { userIsSecurity } = useAuth();
+
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Register Visitor" component={RegisterVisitorScreen} />
-      <Tab.Screen name="Register Parcel" component={RegisterParcelScreen} />
+      {userIsSecurity && (
+        <Tab.Screen name="Register Visitor" component={RegisterVisitor} />
+      )}
+      {userIsSecurity && (
+        <Tab.Screen name="Register Parcel" component={RegisterParcel} />
+      )}
+      {!userIsSecurity && (
+        <Tab.Screen name="Register Visitor" component={RegisterVisitorScreen} />
+      )}
+      {!userIsSecurity && (
+        <Tab.Screen name="Register Parcel" component={RegisterParcelScreen} />
+      )}
     </Tab.Navigator>
   );
 }
