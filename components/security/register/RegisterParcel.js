@@ -163,7 +163,6 @@ export default function RegisterParcel() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white", padding: 20 }}>
-      {/* <FlatList data={images} renderItem={renderItem} /> */}
       <View style={{ flex: 1 }}>
         <Text
           style={{

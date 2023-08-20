@@ -11,7 +11,7 @@ import { useAuth } from "../../../context/AuthContext";
 const Tab = createMaterialTopTabNavigator();
 
 export default function Visits() {
-  const { userIsSecurity, userResidentUnit } = useAuth();
+  const { userIsSecurity } = useAuth();
 
   return (
     <Tab.Navigator>

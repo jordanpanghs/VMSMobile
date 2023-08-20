@@ -29,7 +29,7 @@ const RegisterNewVisitor = () => {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
-  const { currentUser } = useAuth();
+  const { currentUser, userResidentUnit } = useAuth();
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
@@ -71,13 +71,17 @@ const RegisterNewVisitor = () => {
     );
 
     addDoc(userRegisteredVisitorsRef, {
-      //add visitor id according to the number of documents in the collection
       visitorName: visitorName,
       visitorIC: visitorIC,
       visitorCarPlate: visitorCarPlate,
       visitorTelNo: visitorTelNo,
       visitorVisitDateTime: visitorVisitDateTime.toISOString(),
       visitorVisitPurpose: visitorVisitPurpose,
+      visitorVisitingUnit: userResidentUnit,
+      isCheckedIn: false,
+      isCheckedOut: false,
+      entryTime: "",
+      exitTime: "",
       hasVisited: false,
     }).then(() => {
       setVisitorName("");
