@@ -162,7 +162,7 @@ export default function RegisterParcel() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white", padding: 20 }}>
+    <SafeAreaView style={{ flex: 1, padding: 20 }}>
       <View style={{ flex: 1 }}>
         <Text
           style={{
