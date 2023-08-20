@@ -52,8 +52,8 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
       setCurrentUser(user);
-      setLoading(false);
 
       if (user) {
         const userDocRef = doc(db, "users", user.uid);
@@ -68,6 +68,8 @@ export function AuthProvider({ children }) {
         setUserIsSecurity(false);
         setUserResidentUnit(null);
       }
+
+      setLoading(false);
     });
     return unsubscribe;
   }, []);

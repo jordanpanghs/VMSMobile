@@ -8,10 +8,12 @@ import {
   SafeAreaView,
   Text,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-import Ionicons from "@expo/vector-icons/Ionicons";
+
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import axios from "axios";
 
@@ -34,7 +36,7 @@ const ensureDirExists = async () => {
 
 export default function RegisterVisitor() {
   const [uploading, setUploading] = useState(false);
-  const [images, setImages] = useState([]);
+  const [image, setImage] = useState("");
   const [fileURL, setfileURL] = useState("");
 
   // Load images on startup
@@ -76,12 +78,12 @@ export default function RegisterVisitor() {
 
   // Save image to file system
   const saveImage = async (uri) => {
-    await ensureDirExists();
-    const filename = new Date().getTime() + ".jpeg";
-    const dest = imgDir + filename;
-    await FileSystem.copyAsync({ from: uri, to: dest });
-    setfileURL(dest); //Test function
-    setImages([...images, dest]);
+    // await ensureDirExists();
+    // const filename = new Date().getTime() + ".jpeg";
+    // const dest = imgDir + filename;
+    // await FileSystem.copyAsync({ from: uri, to: dest });
+    setfileURL(uri); //Test function
+    setImage(uri);
   };
 
   // Upload image to google fire storage
@@ -106,13 +108,12 @@ export default function RegisterVisitor() {
     setUploading(false);
   };
 
-  // Delete image from file system
-  const deleteImage = async (uri) => {
-    await FileSystem.deleteAsync(uri);
-    setImages(images.filter((i) => i !== uri));
-  };
-
   const detectLabels = async (fileURL) => {
+    if (!fileURL) {
+      alert("No image detected. Please upload or capture an image first.");
+      return [];
+    }
+
     const credentials = require("../../../visitor-management-syste-3f0f7-e8395bfdb89d.json");
     const apiKey = credentials.private_key;
     const url = `https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCxKvcfZcIQy42hjIwbo8jominxkAW6-J0`;
@@ -146,47 +147,55 @@ export default function RegisterVisitor() {
       console.log(texts);
       return texts;
     } catch (error) {
-      console.error(error);
+      console.log(error);
       return [];
     }
   };
 
-  // Render image list item
-  function renderItem({ item }) {
-    const filename = item.split("/").pop();
-    return (
-      <View
-        style={{
-          flexDirection: "row",
-          margin: 1,
-          alignItems: "center",
-          gap: 5,
-        }}
-      >
-        <Image style={{ width: 80, height: 80 }} source={{ uri: item }} />
-        <Text style={{ flex: 1 }}>{filename}</Text>
-        <Ionicons.Button
-          name="cloud-upload"
-          onPress={() => uploadImage(item)}
-        />
-        <Ionicons.Button name="trash" onPress={() => deleteImage(item)} />
-      </View>
-    );
-  }
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <Text
-        style={{
-          textAlign: "center",
-          fontSize: 20,
-          fontWeight: "500",
-          padding: 20,
-        }}
-      >
-        Select or Upload Image of Visitor's Car License Plate
-      </Text>
-      <FlatList data={images} renderItem={renderItem} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white", padding: 20 }}>
+      {/* <FlatList data={images} renderItem={renderItem} /> */}
+      <View style={{ flex: 1 }}>
+        <Text
+          style={{
+            textAlign: "center",
+            fontSize: 20,
+            fontWeight: "500",
+            paddingTop: 50,
+          }}
+        >
+          Select or Upload Image of Visitor's Car License Plate
+        </Text>
+
+        {image && (
+          <View style={{ flex: 1 }}>
+            {image && (
+              <Image
+                source={{ uri: image }}
+                alt="No Image Selected"
+                style={{ flex: 1, resizeMode: "contain" }}
+              />
+            )}
+          </View>
+        )}
+
+        {!image && (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              opacity: 0.2,
+            }}
+          >
+            <MaterialCommunityIcons
+              name="image-off-outline"
+              size={200}
+              color="black"
+            />
+          </View>
+        )}
+      </View>
 
       <View
         style={{
@@ -195,10 +204,32 @@ export default function RegisterVisitor() {
           marginVertical: 20,
         }}
       >
-        <Button title="Photo Library" onPress={() => selectImage(true)} />
-        <Button title="Capture Image" onPress={() => selectImage(false)} />
-        <Button title="Click me" onPress={() => detectLabels(fileURL)}></Button>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => selectImage(true)}
+        >
+          <Text style={styles.buttonText}>Upload Image </Text>
+          <MaterialCommunityIcons
+            name="image-multiple"
+            size={24}
+            color="white"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => selectImage(false)}
+        >
+          <Text style={styles.buttonText}>Capture Image </Text>
+          <MaterialCommunityIcons name="camera" size={24} color="white" />
+        </TouchableOpacity>
       </View>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => detectLabels(fileURL)}
+      >
+        <Text style={styles.buttonText}>Click Me </Text>
+      </TouchableOpacity>
 
       {uploading && (
         <View
@@ -217,3 +248,18 @@ export default function RegisterVisitor() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: "#007AFF",
+    borderRadius: 5,
+    padding: 10,
+    alignItems: "center",
+    gap: 5,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontFamily: "DMBold",
+  },
+});

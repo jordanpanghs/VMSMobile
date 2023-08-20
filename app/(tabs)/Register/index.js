@@ -28,20 +28,20 @@ function RegisterParcelScreen() {
 }
 
 export default function Home() {
-  const { userIsSecurity } = useAuth();
+  const { currentUser, userIsSecurity } = useAuth();
 
   return (
     <Tab.Navigator>
-      {userIsSecurity && (
+      {currentUser && userIsSecurity && (
         <Tab.Screen name="Register Visitor" component={RegisterVisitor} />
       )}
-      {userIsSecurity && (
+      {currentUser && userIsSecurity && (
         <Tab.Screen name="Register Parcel" component={RegisterParcel} />
       )}
-      {!userIsSecurity && (
+      {currentUser && !userIsSecurity && (
         <Tab.Screen name="Register Visitor" component={RegisterVisitorScreen} />
       )}
-      {!userIsSecurity && (
+      {currentUser && !userIsSecurity && (
         <Tab.Screen name="Register Parcel" component={RegisterParcelScreen} />
       )}
     </Tab.Navigator>
