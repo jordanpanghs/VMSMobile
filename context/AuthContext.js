@@ -47,12 +47,12 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userIsSecurity, setUserIsSecurity] = useState(null);
   const [userResidentUnit, setUserResidentUnit] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setLoading(true);
+      setLoading(false);
       setCurrentUser(user);
 
       if (user) {
@@ -68,8 +68,6 @@ export function AuthProvider({ children }) {
         setUserIsSecurity(false);
         setUserResidentUnit(null);
       }
-
-      setLoading(false);
     });
     return unsubscribe;
   }, []);

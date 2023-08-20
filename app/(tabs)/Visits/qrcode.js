@@ -9,7 +9,9 @@ import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 export default function showVisitorQRCode() {
   //Retrieve the document id from params passed in from upcomingvisits.js
   const searchParams = useLocalSearchParams();
+  const userID = searchParams.userID;
   const documentID = searchParams.documentID;
+  const qrCodeData = { userID: userID, documentID: documentID };
   const visitorName = searchParams.visitorName.split(" ").shift();
 
   const [productQRref, setProductQRref] = useState();
@@ -57,7 +59,7 @@ export default function showVisitorQRCode() {
       />
       <View style={styles.qrContainer}>
         <QRCode
-          value={JSON.stringify(documentID)}
+          value={JSON.stringify(qrCodeData)}
           size={300}
           getRef={(c) => setProductQRref(c)}
         />

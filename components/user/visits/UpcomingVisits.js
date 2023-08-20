@@ -120,6 +120,7 @@ export default function UpcomingVisits() {
       pathname: "/visits/qrcode",
       params: {
         documentID: visitor.id,
+        userID: currentUser.uid,
         visitorName: visitor.visitorName,
       },
     });
