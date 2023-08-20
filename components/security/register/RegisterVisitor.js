@@ -175,9 +175,16 @@ export default function RegisterVisitor() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "500" }}>
-        My Images
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <Text
+        style={{
+          textAlign: "center",
+          fontSize: 20,
+          fontWeight: "500",
+          padding: 20,
+        }}
+      >
+        Select or Upload Image of Visitor's Car License Plate
       </Text>
       <FlatList data={images} renderItem={renderItem} />
 
