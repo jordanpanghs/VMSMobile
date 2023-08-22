@@ -60,7 +60,7 @@ export default findVisitor = () => {
         setVisitorData(docData);
         setIsLoading(false);
       } else {
-        console.log("No such document!");
+        alert("No such document!");
       }
     } catch (error) {
       console.log(error);
@@ -149,9 +149,6 @@ export default findVisitor = () => {
           plateNo={visitorData.visitorCarPlate}
           setImageLocation={setPlateImage}
         />
-
-        <Text>{licenseImage}</Text>
-        <Text>{plateImage}</Text>
 
         <View style={styles.confirmationContainer}>
           <View>

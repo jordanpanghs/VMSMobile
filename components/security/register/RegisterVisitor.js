@@ -29,16 +29,16 @@ export default function RegisterVisitor() {
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
-    let test;
+    let dataObj;
     try {
-      test = JSON.parse(data);
+      dataObj = JSON.parse(data);
     } catch (error) {
       console.log(error);
       alert("Invalid QR Code");
       return;
     }
 
-    if (test?.userID === undefined || test?.documentID === undefined) {
+    if (dataObj?.userID === undefined || dataObj?.documentID === undefined) {
       alert("Invalid QR Code");
     }
 
