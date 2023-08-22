@@ -28,6 +28,21 @@ export default function RegisterVisitor() {
   };
 
   const handleBarCodeScanned = ({ data }) => {
+    let test;
+    try {
+      test = JSON.parse(data);
+    } catch (error) {
+      setScanned(true);
+      console.log(error);
+      alert("Invalid QR Code");
+      return;
+    }
+
+    if (test?.userID === undefined || test?.documentID === undefined) {
+      setScanned(true);
+      alert("Invalid QR Code");
+    }
+
     setScanned(true);
     router.push({
       pathname: "/register/findvisitor",
