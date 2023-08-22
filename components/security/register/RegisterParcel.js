@@ -111,11 +111,11 @@ export default function RegisterParcel() {
   const registerParcel = async (fileURL) => {
     const resultsArray = await detectLabels(fileURL);
 
-    const trackingNumberRegex = /^(SPXMY|MY|SPX|SPE|\d{1})\d{7,14}.$/; // Regular expression to match 12-digit tracking number
-    const trackingNumber = resultsArray.find((text) =>
-      trackingNumberRegex.test(text)
-    );
-    console.log(trackingNumber);
+    // const trackingNumberRegex = /^(SPXMY|MY|SPX|SPE|\d{1})\d{7,14}.$/; // Regular expression to match 12-digit tracking number
+    // const trackingNumber = resultsArray.find((text) =>
+    //   trackingNumberRegex.test(text)
+    // );
+    console.log(resultsArray);
   };
 
   const detectLabels = async (fileURL) => {
