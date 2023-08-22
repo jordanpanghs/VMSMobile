@@ -28,12 +28,12 @@ import {
 
 const imgDir = FileSystem.documentDirectory + "images/";
 
-const ensureDirExists = async () => {
-  const dirInfo = await FileSystem.getInfoAsync(imgDir);
-  if (!dirInfo.exists) {
-    await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true });
-  }
-};
+// const ensureDirExists = async () => {
+//   const dirInfo = await FileSystem.getInfoAsync(imgDir);
+//   if (!dirInfo.exists) {
+//     await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true });
+//   }
+// };
 
 export default function RegisterParcel(props) {
   const [uploading, setUploading] = useState(false);
@@ -41,18 +41,18 @@ export default function RegisterParcel(props) {
   const [fileURL, setfileURL] = useState("");
 
   // Load images on startup
-  useEffect(() => {
-    loadImages();
-  }, []);
+  //   useEffect(() => {
+  //     loadImages();
+  //   }, []);
 
   // Load images from file system
-  const loadImages = async () => {
-    await ensureDirExists();
-    const files = await FileSystem.readDirectoryAsync(imgDir);
-    if (files.length > 0) {
-      setImages(files.map((f) => imgDir + f));
-    }
-  };
+  //   const loadImages = async () => {
+  //     await ensureDirExists();
+  //     const files = await FileSystem.readDirectoryAsync(imgDir);
+  //     if (files.length > 0) {
+  //       setImages(files.map((f) => imgDir + f));
+  //     }
+  //   };
 
   // Select image from library or camera
   const selectImage = async (useLibrary) => {
@@ -83,11 +83,12 @@ export default function RegisterParcel(props) {
     // const filename = new Date().getTime() + ".jpeg";
     // const dest = imgDir + filename;
     // await FileSystem.copyAsync({ from: uri, to: dest });
+    props.setImageLocation(uri);
     setfileURL(uri); //Test function
     setImage(uri);
   };
 
-  // Upload image to google fire storage
+  //   Upload image to google fire storage
   const uploadImage = async (uri) => {
     setUploading(true);
 
@@ -109,7 +110,7 @@ export default function RegisterParcel(props) {
     setUploading(false);
   };
 
-  const registerParcel = async (fileURL) => {
+  const checkIfDataMatches = async (fileURL) => {
     const resultsArray = await detectLabels(fileURL);
     const str = resultsArray[0];
 
@@ -154,10 +155,13 @@ export default function RegisterParcel(props) {
       const isCarPlateMatch = str.replace(/\s/g, "").includes(plateNo);
 
       if (isCarPlateMatch) {
-        Alert.alert("Match", "Car license plate matches with registered data!");
+        Alert.alert(
+          "Success!",
+          "Car license plate matches with registered data!"
+        );
       } else {
         Alert.alert(
-          "Mismatch",
+          "Failed!",
           "Car license plate does not match with registered data!"
         );
       }
@@ -293,7 +297,7 @@ export default function RegisterParcel(props) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => registerParcel(fileURL)}
+        onPress={() => checkIfDataMatches(fileURL)}
       >
         <Text style={styles.buttonText}>Check for match</Text>
       </TouchableOpacity>

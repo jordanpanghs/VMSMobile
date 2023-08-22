@@ -30,9 +30,8 @@ export default CheckedInVisitors = () => {
 
       const q = query(
         collectionGroup(db, "userRegisteredVisitors"),
-        where("visitorVisitDateTime", ">=", startOfToday),
-        where("visitorVisitDateTime", "<=", endOfToday),
-        where("isCheckedIn", "==", true)
+        where("isCheckedIn", "==", true),
+        where("isCheckedOut", "==", false)
       );
 
       const unsubscribe = await onSnapshot(

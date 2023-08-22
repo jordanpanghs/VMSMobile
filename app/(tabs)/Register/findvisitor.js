@@ -12,6 +12,14 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import UploadImage from "../../../components/security/register/UploadImage";
 
 import { collection, getDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  getStorage,
+  ref,
+  uploadString,
+  getDownloadURL,
+  uploadBytes,
+} from "firebase/storage";
+
 import { db } from "../../../firebase";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -19,6 +27,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 export default findVisitor = () => {
   const [visitorData, setVisitorData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [plateImage, setPlateImage] = useState("");
+  const [licenseImage, setLicenseImage] = useState("");
 
   const params = useLocalSearchParams();
   const data = JSON.parse(params.qrData);
@@ -57,12 +67,31 @@ export default findVisitor = () => {
     }
   };
 
+  const uploadImage = async (uri, imageType) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const filename = documentID;
+
+    const storage = getStorage();
+    const storageRef =
+      imageType === "licenseImage"
+        ? ref(storage, `visitorDriverLicense/${filename}`)
+        : ref(storage, `visitorCarPlate/${filename}`);
+
+    try {
+      await uploadBytes(storageRef, blob);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   handleCheckInVisitor = async () => {
     if (visitorData.isCheckedIn) {
       router.back();
       alert("Visitor has already checked in!");
       return;
     }
+    setIsLoading(true);
     const userDocRef = doc(db, "users", userID);
     const userRegisteredVisitorsRef = collection(
       userDocRef,
@@ -71,10 +100,13 @@ export default findVisitor = () => {
     const visitorDocRef = doc(userRegisteredVisitorsRef, documentID);
 
     try {
+      await uploadImage(licenseImage, "licenseImage");
+      await uploadImage(plateImage, "plateImage");
       await updateDoc(visitorDocRef, {
         isCheckedIn: true,
         entryTime: new Date().toISOString(),
       });
+      setIsLoading(false);
       router.back();
       alert("Visitor Checked In!");
     } catch (error) {
@@ -110,11 +142,16 @@ export default findVisitor = () => {
           detectionType={"driversLicense"}
           name={visitorData.visitorName}
           icNo={visitorData.visitorIC}
+          setImageLocation={setLicenseImage}
         />
         <UploadImage
           detectionType={"carPlate"}
           plateNo={visitorData.visitorCarPlate}
+          setImageLocation={setPlateImage}
         />
+
+        <Text>{licenseImage}</Text>
+        <Text>{plateImage}</Text>
 
         <View style={styles.confirmationContainer}>
           <View>
