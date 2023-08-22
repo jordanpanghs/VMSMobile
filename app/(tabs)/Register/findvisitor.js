@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import RegisterParcel from "../../../components/security/register/RegisterParcel";
+import UploadImage from "../../../components/security/register/UploadImage";
 
 import { collection, getDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
@@ -83,65 +83,77 @@ export default findVisitor = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.textContainer}>
-        <Text style={styles.textLabel}>{"Visitor's Name:"}</Text>
-        <Text style={styles.text}>{visitorData.visitorName}</Text>
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.textLabel}>{"Visitor's IC Number:"}</Text>
-        <Text style={styles.text}>{visitorData.visitorIC}</Text>
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.textLabel}>{"Visitor's Car Plate:"}</Text>
-        <Text style={styles.text}>{visitorData.visitorCarPlate}</Text>
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.textLabel}>{"Visitor's Visit Purpose:"}</Text>
-        <Text style={styles.text}>{visitorData.visitorVisitPurpose}</Text>
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.textLabel}>{"Visitor's Visiting Unit:"}</Text>
-        <Text style={styles.text}>{visitorData.visitorVisitingUnit}</Text>
-      </View>
-
-      <RegisterParcel />
-
-      <View style={styles.confirmationContainer}>
-        <View>
-          <Text style={styles.confirmationText}>Confirm Check In Visitor?</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.textContainer}>
+          <Text style={styles.textLabel}>{"Visitor's Name:"}</Text>
+          <Text style={styles.text}>{visitorData.visitorName}</Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textLabel}>{"Visitor's IC Number:"}</Text>
+          <Text style={styles.text}>{visitorData.visitorIC}</Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textLabel}>{"Visitor's Car Plate:"}</Text>
+          <Text style={styles.text}>{visitorData.visitorCarPlate}</Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textLabel}>{"Visitor's Visit Purpose:"}</Text>
+          <Text style={styles.text}>{visitorData.visitorVisitPurpose}</Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textLabel}>{"Visitor's Visiting Unit:"}</Text>
+          <Text style={styles.text}>{visitorData.visitorVisitingUnit}</Text>
         </View>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.buttonCancel}
-            onPress={() => router.back()}
+        <UploadImage
+          detectionType={"driversLicense"}
+          name={visitorData.visitorName}
+          icNo={visitorData.visitorIC}
+        />
+        <UploadImage
+          detectionType={"carPlate"}
+          plateNo={visitorData.visitorCarPlate}
+        />
+
+        <View style={styles.confirmationContainer}>
+          <View>
+            <Text style={styles.confirmationText}>
+              Confirm Check In Visitor?
+            </Text>
+          </View>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.buttonCancel}
+              onPress={() => router.back()}
+            >
+              <Ionicons name="close" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonConfirm}
+              onPress={() => handleCheckInVisitor()}
+            >
+              <Ionicons name="checkmark" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {isLoading && (
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                backgroundColor: "rgba(0,0,0,0.4)",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+            ]}
           >
-            <Ionicons name="close" size={24} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonConfirm}
-            onPress={() => handleCheckInVisitor()}
-          >
-            <Ionicons name="checkmark" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
+            <ActivityIndicator color="#fff" animating size="large" />
+          </View>
+        )}
       </View>
-
-      {isLoading && (
-        <View
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              backgroundColor: "rgba(0,0,0,0.4)",
-              alignItems: "center",
-              justifyContent: "center",
-            },
-          ]}
-        >
-          <ActivityIndicator color="#fff" animating size="large" />
-        </View>
-      )}
     </ScrollView>
   );
 };
@@ -149,8 +161,8 @@ export default findVisitor = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     gap: 20,
+    padding: 20,
   },
   textContainer: {
     flexDirection: "column",
@@ -168,10 +180,10 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    gap: 20,
   },
   buttonContainer: {
     justifyContent: "space-evenly",
-    marginVertical: 20,
     flexDirection: "row",
     gap: 50,
   },
@@ -190,7 +202,7 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   confirmationText: {
-    fontSize: 25,
+    fontSize: 20,
     fontFamily: "DMBold",
   },
   buttonText: {
