@@ -4,13 +4,14 @@ import {
   View,
   ActivityIndicator,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { collection, getDoc, doc, updateDoc } from "firebase/firestore";
+import RegisterParcel from "../../../components/security/register/RegisterParcel";
 
+import { collection, getDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -82,7 +83,7 @@ export default findVisitor = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.textContainer}>
         <Text style={styles.textLabel}>{"Visitor's Name:"}</Text>
         <Text style={styles.text}>{visitorData.visitorName}</Text>
@@ -103,6 +104,8 @@ export default findVisitor = () => {
         <Text style={styles.textLabel}>{"Visitor's Visiting Unit:"}</Text>
         <Text style={styles.text}>{visitorData.visitorVisitingUnit}</Text>
       </View>
+
+      <RegisterParcel />
 
       <View style={styles.confirmationContainer}>
         <View>
@@ -139,14 +142,13 @@ export default findVisitor = () => {
           <ActivityIndicator color="#fff" animating size="large" />
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     padding: 20,
     gap: 20,
   },
