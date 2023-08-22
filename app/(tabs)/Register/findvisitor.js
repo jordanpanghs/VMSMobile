@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import UploadImage from "../../../components/security/register/UploadImage";
+import UploadVisitorImage from "../../../components/security/register/UploadVisitorImage";
 
 import { collection, getDoc, doc, updateDoc } from "firebase/firestore";
 import {
@@ -138,13 +138,13 @@ export default findVisitor = () => {
           <Text style={styles.text}>{visitorData.visitorVisitingUnit}</Text>
         </View>
 
-        <UploadImage
+        <UploadVisitorImage
           detectionType={"driversLicense"}
           name={visitorData.visitorName}
           icNo={visitorData.visitorIC}
           setImageLocation={setLicenseImage}
         />
-        <UploadImage
+        <UploadVisitorImage
           detectionType={"carPlate"}
           plateNo={visitorData.visitorCarPlate}
           setImageLocation={setPlateImage}

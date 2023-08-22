@@ -20,14 +20,25 @@ import {
   collectionGroup,
 } from "firebase/firestore";
 
+import {
+  getStorage,
+  ref,
+  uploadString,
+  getDownloadURL,
+  uploadBytes,
+} from "firebase/storage";
+
 import { db } from "../../../firebase";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
+
+import UploadParcelImage from "../../../components/security/register/UploadParcelImage";
 
 export default findParcel = () => {
   const [parcelData, setParcelData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [documentRef, setDocumentRef] = useState("");
+  const [parcelImage, setParcelImage] = useState("");
 
   const params = useLocalSearchParams();
   const parcelTrackingNumber = params.qrData;
@@ -54,6 +65,7 @@ export default findParcel = () => {
       if (querySnapshot.size > 0) {
         const docData = querySnapshot.docs.map((doc) => ({
           docRef: doc.ref,
+          id: doc.id,
           ...doc.data(),
         }));
         setParcelData(docData[0]);
@@ -67,6 +79,25 @@ export default findParcel = () => {
     }
   };
 
+  const uploadImage = async (uri) => {
+    setIsLoading(true);
+
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const filename = documentRef.id;
+
+    const storage = getStorage();
+    const storageRef = ref(storage, `visitorParcelLabel/${filename}`);
+
+    try {
+      await uploadBytes(storageRef, blob);
+    } catch (e) {
+      console.log(e);
+    }
+
+    setIsLoading(false);
+  };
+
   handleRegisterParcel = async () => {
     if (parcelData.hasArrived) {
       router.back();
@@ -76,6 +107,7 @@ export default findParcel = () => {
     setIsLoading(true);
 
     try {
+      await uploadImage(parcelImage);
       await updateDoc(documentRef, {
         hasArrived: true,
         arrivalTime: new Date().toISOString(),
@@ -112,6 +144,8 @@ export default findParcel = () => {
           <Text style={styles.text}>{parcelData.parcelReceiverUnit}</Text>
         </View>
 
+        <UploadParcelImage setImageLocation={setParcelImage} />
+
         <View style={styles.confirmationContainer}>
           <View>
             <Text style={styles.confirmationText}>
@@ -134,22 +168,21 @@ export default findParcel = () => {
             </TouchableOpacity>
           </View>
         </View>
-
-        {isLoading && (
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              {
-                backgroundColor: "rgba(0,0,0,0.4)",
-                alignItems: "center",
-                justifyContent: "center",
-              },
-            ]}
-          >
-            <ActivityIndicator color="#fff" animating size="large" />
-          </View>
-        )}
       </View>
+      {isLoading && (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: "rgba(0,0,0,0.4)",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          ]}
+        >
+          <ActivityIndicator color="#fff" animating size="large" />
+        </View>
+      )}
     </ScrollView>
   );
 };
