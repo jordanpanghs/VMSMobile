@@ -20,8 +20,12 @@ const LoginScreen = () => {
 
   const { login, currentUser } = useAuth();
 
-  const handleLogin = () => {
-    login(email, password);
+  const handleLogin = async () => {
+    try {
+      await login(email, password);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (

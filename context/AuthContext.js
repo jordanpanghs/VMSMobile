@@ -72,8 +72,18 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-  function login(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
+  async function login(email, password) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      return userCredential;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   function logout() {
