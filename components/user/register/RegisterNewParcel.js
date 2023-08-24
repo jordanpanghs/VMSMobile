@@ -18,16 +18,15 @@ import { useAuth } from "../../../context/AuthContext";
 function RegisterNewParcel() {
   const [parcelReceiverName, setParcelReceiverName] = useState("");
   const [parcelReceiverTelNo, setParcelReceiverTelNo] = useState("");
-  const [parcelReceiverUnit, setParcelReceiverUnit] = useState("");
+
   const [parcelTrackingNumber, setParcelTrackingNumber] = useState("");
 
-  const { currentUser } = useAuth();
+  const { currentUser, userResidentUnit } = useAuth();
 
   const addParcel = () => {
     if (
       parcelReceiverName.trim() === "" ||
       parcelReceiverTelNo.trim() === "" ||
-      parcelReceiverUnit.trim() === "" ||
       parcelTrackingNumber.trim() === ""
     ) {
       alert("Please fill in all required fields");
@@ -43,14 +42,14 @@ function RegisterNewParcel() {
     addDoc(userRegisteredParcelsRef, {
       parcelReceiverName: parcelReceiverName,
       parcelReceiverTelNo: parcelReceiverTelNo,
-      parcelReceiverUnit: parcelReceiverUnit,
+      parcelReceiverUnit: userResidentUnit,
       parcelTrackingNumber: parcelTrackingNumber,
       isClaimed: false,
       hasArrived: false,
     }).then(() => {
       setParcelReceiverName("");
       setParcelReceiverTelNo("");
-      setParcelReceiverUnit("");
+
       setParcelTrackingNumber("");
       alert("Added successfully");
     });
@@ -95,15 +94,7 @@ function RegisterNewParcel() {
             onChangeText={(text) => setParcelTrackingNumber(text.toUpperCase())}
           />
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Receiver Unit</Text>
-          <TextInput
-            selectionColor="#007aff"
-            style={styles.input}
-            value={parcelReceiverUnit}
-            onChangeText={(text) => setParcelReceiverUnit(text.toUpperCase())}
-          />
-        </View>
+
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={addParcel}>
             <Text style={styles.buttonText}>Submit</Text>
