@@ -111,6 +111,15 @@ export default function UnclaimedParcels() {
     );
   };
 
+  const handleShowParcelImage = (parcel) => {
+    router.push({
+      pathname: "/parcels/showparcel",
+      params: {
+        imageURL: encodeURIComponent(parcel.imageURL),
+      },
+    });
+  };
+
   const handleShowQR = (parcel) => {
     router.push({
       pathname: "/parcels/qrcode",
@@ -169,7 +178,7 @@ export default function UnclaimedParcels() {
                 <View>
                   <TouchableOpacity
                     style={styles.parcelStatusContainer}
-                    onPress={() => handleEditParcel(parcel)}
+                    onPress={() => handleShowParcelImage(parcel)}
                     disabled={!parcel.hasArrived}
                   >
                     <Text
