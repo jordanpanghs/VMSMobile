@@ -9,7 +9,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import RegisterNewVisitor from "../../components/user/register/RegisterNewVisitor";
 
+import { useAuth } from "../../context/AuthContext";
+
 export default () => {
+  const { currentUser, userIsSecurity } = useAuth();
+
   return (
     //Bottom Tab Bar Navigator
 
@@ -24,13 +28,24 @@ export default () => {
     >
       <Tabs.Screen
         name="home"
-        options={{
-          headerTitle: "Home",
-          tabBarLabel: "Home",
-          tabBarIcon: ({ focused, color }) => {
-            return <Ionicon name="home" size={30} color={color} />;
-          },
-        }}
+        options={
+          currentUser && userIsSecurity
+            ? {
+                headerTitle: "Home",
+                tabBarLabel: "Home",
+                tabBarIcon: ({ focused, color }) => {
+                  return <Ionicon name="home" size={30} color={color} />;
+                },
+                href: null,
+              }
+            : {
+                headerTitle: "Home",
+                tabBarLabel: "Home",
+                tabBarIcon: ({ focused, color }) => {
+                  return <Ionicon name="home" size={30} color={color} />;
+                },
+              }
+        }
       />
       <Tabs.Screen
         name="visits"
