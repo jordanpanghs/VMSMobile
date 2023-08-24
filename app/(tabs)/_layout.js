@@ -26,7 +26,7 @@ export default () => {
         tabBarInactiveTintColor: "black",
       }}
     >
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="home"
         options={
           currentUser && userIsSecurity
@@ -46,7 +46,7 @@ export default () => {
                 },
               }
         }
-      />
+      /> */}
       <Tabs.Screen
         name="visits"
         options={{
