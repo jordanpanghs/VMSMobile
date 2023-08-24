@@ -80,6 +80,9 @@ export default findVisitor = () => {
 
     try {
       await uploadBytes(storageRef, blob);
+      const imageURL = await getDownloadURL(storageRef);
+      return imageURL;
+      console.log(getDownloadURL(storageRef));
     } catch (e) {
       console.log(e);
     }
@@ -100,11 +103,16 @@ export default findVisitor = () => {
     const visitorDocRef = doc(userRegisteredVisitorsRef, documentID);
 
     try {
-      await uploadImage(licenseImage, "licenseImage");
-      await uploadImage(plateImage, "plateImage");
+      const driversLicenseImageURL = await uploadImage(
+        licenseImage,
+        "licenseImage"
+      );
+      const carPlateImageURL = await uploadImage(plateImage, "plateImage");
       await updateDoc(visitorDocRef, {
         isCheckedIn: true,
         entryTime: new Date().toISOString(),
+        driversLicenseImageURL: driversLicenseImageURL,
+        carPlateImageURL: carPlateImageURL,
       });
       setIsLoading(false);
       router.back();

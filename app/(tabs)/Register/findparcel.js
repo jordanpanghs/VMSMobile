@@ -91,6 +91,8 @@ export default findParcel = () => {
 
     try {
       await uploadBytes(storageRef, blob);
+      const imageURL = await getDownloadURL(storageRef);
+      return imageURL;
     } catch (e) {
       console.log(e);
     }
@@ -107,10 +109,11 @@ export default findParcel = () => {
     setIsLoading(true);
 
     try {
-      await uploadImage(parcelImage);
+      const imageURL = await uploadImage(parcelImage);
       await updateDoc(documentRef, {
         hasArrived: true,
         arrivalTime: new Date().toISOString(),
+        imageURL: imageURL,
       });
       setIsLoading(false);
       router.back();
