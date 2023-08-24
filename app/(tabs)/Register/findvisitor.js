@@ -61,6 +61,7 @@ export default findVisitor = () => {
         setIsLoading(false);
       } else {
         alert("No such document!");
+        router.back();
       }
     } catch (error) {
       console.log(error);

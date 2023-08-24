@@ -73,6 +73,7 @@ export default findParcel = () => {
         setIsLoading(false);
       } else {
         alert("No such document!");
+        router.back();
       }
     } catch (error) {
       console.log(error);

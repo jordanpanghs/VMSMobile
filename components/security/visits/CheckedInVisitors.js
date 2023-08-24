@@ -24,10 +24,6 @@ export default CheckedInVisitors = () => {
 
   fetchData = async () => {
     try {
-      const today = new Date();
-      const startOfToday = startOfDay(today).toISOString();
-      const endOfToday = endOfDay(today).toISOString();
-
       const q = query(
         collectionGroup(db, "userRegisteredVisitors"),
         where("isCheckedIn", "==", true),

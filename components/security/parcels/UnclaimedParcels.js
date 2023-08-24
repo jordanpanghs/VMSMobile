@@ -8,14 +8,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import {
-  collection,
-  query,
-  where,
-  doc,
-  onSnapshot,
-  deleteDoc,
-} from "firebase/firestore";
+import { collectionGroup, query, where, onSnapshot } from "firebase/firestore";
 
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -25,14 +18,14 @@ import { db } from "../../../firebase";
 import { useAuth } from "../../../context/AuthContext";
 import { useRouter } from "expo-router";
 
-export default function ClaimedParcels() {
+export default function UnclaimedParcels() {
   const [registeredParcelsData, setRegisteredParcelsData] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const router = useRouter();
-
   const { currentUser } = useAuth();
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!isDataFetched) {
@@ -42,12 +35,12 @@ export default function ClaimedParcels() {
 
   const fetchData = async () => {
     try {
-      const userDocRef = doc(db, "users", currentUser.uid);
-      const userRegisteredParcelsRef = collection(
-        userDocRef,
-        "userRegisteredParcels"
+      const q = query(
+        collectionGroup(db, "userRegisteredParcels"),
+        where("hasArrived", "==", true),
+        where("isClaimed", "==", false)
       );
-      const q = query(userRegisteredParcelsRef, where("isClaimed", "==", true));
+
       const unsubscribe = await onSnapshot(
         q,
         (snapshot) => {
@@ -63,51 +56,18 @@ export default function ClaimedParcels() {
           console.log(error);
         }
       );
+      setIsLoading(false);
       return unsubscribe;
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleEditParcel = async (parcel) => {
+  const handleShowParcelImage = (parcel) => {
     router.push({
-      pathname: "/parcels/editparcel",
+      pathname: "/parcels/showparcel",
       params: {
-        documentID: parcel.id,
-        parcelReceiverName: parcel.parcelReceiverName,
-        parcelReceiverTelNo: parcel.parcelReceiverTelNo,
-        parcelTrackingNumber: parcel.parcelTrackingNumber,
-        parcelReceiverUnit: parcel.parcelReceiverUnit,
-      },
-    });
-  };
-
-  const handleDeleteParcel = async (documentId) => {
-    Alert.alert(
-      "Confirm Delete",
-      `Are you sure you want to delete this parcel?`,
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "OK",
-          onPress: async () => {
-            const docRef = doc(db, "registeredParcels", documentId);
-            await deleteDoc(docRef);
-            alert("Parcel deleted successfully!");
-          },
-        },
-      ]
-    );
-  };
-
-  const handleShowQR = (parcel) => {
-    router.push({
-      pathname: "/parcels/qrcode",
-      params: {
-        documentID: parcel.id,
+        imageURL: encodeURIComponent(parcel.imageURL),
       },
     });
   };
@@ -131,7 +91,8 @@ export default function ClaimedParcels() {
 
       {isDataFetched && registeredParcelsData.length === 0 && (
         <View style={styles.noDataContainer}>
-          <Text style={styles.noParcelText}>No claimed parcels found.</Text>
+          <Text style={styles.noParcelText}>No registered parcels found.</Text>
+          <Text style={styles.noParcelText}>Register a new one!</Text>
           <MaterialCommunityIcons
             name="archive-off-outline"
             size={130}
@@ -157,8 +118,29 @@ export default function ClaimedParcels() {
                 <Text style={styles.dataText}>
                   {parcel.parcelTrackingNumber}
                 </Text>
-                <Text>Claimed by Jordan on 18/8/2023</Text>
+                <View>
+                  <TouchableOpacity
+                    style={styles.parcelStatusContainer}
+                    onPress={() => handleShowParcelImage(parcel)}
+                  >
+                    <Text style={[styles.parcelStatus]}>Show Parcel Image</Text>
+                    <View>
+                      <Feather
+                        name="external-link"
+                        size={25}
+                        color={"#007AFF"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: 20,
+                }}
+              ></View>
             </View>
           )}
           ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
@@ -211,5 +193,16 @@ const styles = StyleSheet.create({
   noParcelText: {
     fontFamily: "DMRegular",
     fontSize: 25,
+  },
+  parcelStatusContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    paddingTop: 20,
+  },
+  parcelStatus: {
+    fontSize: 15,
+    fontFamily: "DMBold",
+    color: "#007AFF",
   },
 });
