@@ -151,11 +151,13 @@ export default findVisitor = () => {
           name={visitorData.visitorName}
           icNo={visitorData.visitorIC}
           setImageLocation={setLicenseImage}
+          setIsLoading={setIsLoading}
         />
         <UploadVisitorImage
           detectionType={"carPlate"}
           plateNo={visitorData.visitorCarPlate}
           setImageLocation={setPlateImage}
+          setIsLoading={setIsLoading}
         />
 
         <View style={styles.confirmationContainer}>

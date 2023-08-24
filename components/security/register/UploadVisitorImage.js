@@ -88,29 +88,8 @@ export default function RegisterParcel(props) {
     setImage(uri);
   };
 
-  //   Upload image to google fire storage
-  const uploadImage = async (uri) => {
-    setUploading(true);
-
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const filename = uri.split("/").pop();
-
-    const storage = getStorage();
-    const storageRef = ref(storage, `visitorCarPlate/${filename}`);
-    setFileName(storageRef);
-
-    try {
-      await uploadBytes(storageRef, blob);
-      alert("Image uploaded successfully");
-    } catch (e) {
-      console.log(e);
-    }
-
-    setUploading(false);
-  };
-
   const checkIfDataMatches = async (fileURL) => {
+    props.setIsLoading(true);
     const resultsArray = await detectLabels(fileURL);
     const str = resultsArray[0];
 
@@ -130,21 +109,25 @@ export default function RegisterParcel(props) {
           "Success!",
           "Both visitor name and ic number matches with registered data!"
         );
+        props.setIsLoading(false);
       } else if (isNameMatch && !isICNoMatch) {
         Alert.alert(
           "Partical Success",
           "Visitor's name matches but IC number does not match with registered data!"
         );
+        props.setIsLoading(false);
       } else if (!isNameMatch && isICNoMatch) {
         Alert.alert(
           "Partical Success",
           "Visitor's IC number matches but name does not match with registered data!"
         );
+        props.setIsLoading(false);
       } else {
         Alert.alert(
           "Failed!",
           "Both visitor name and ic number does not match with registered data!"
         );
+        props.setIsLoading(false);
       }
     }
 
@@ -159,11 +142,13 @@ export default function RegisterParcel(props) {
           "Success!",
           "Car license plate matches with registered data!"
         );
+        props.setIsLoading(false);
       } else {
         Alert.alert(
           "Failed!",
           "Car license plate does not match with registered data!"
         );
+        props.setIsLoading(false);
       }
     }
   };
