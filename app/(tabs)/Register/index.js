@@ -36,7 +36,10 @@ export default function Home() {
         <Tab.Screen name="Register Visitor" component={RegisterVisitor} />
       )}
       {currentUser && userIsSecurity && (
-        <Tab.Screen name="Register Parcel" component={RegisterParcel} />
+        <Tab.Screen
+          name="Register / Redeem Parcel"
+          component={RegisterParcel}
+        />
       )}
       {currentUser && !userIsSecurity && (
         <Tab.Screen name="Register Visitor" component={RegisterVisitorScreen} />
