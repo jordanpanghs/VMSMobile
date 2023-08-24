@@ -11,7 +11,6 @@ import {
 import { collectionGroup, query, where, onSnapshot } from "firebase/firestore";
 
 import Feather from "react-native-vector-icons/Feather";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { db } from "../../../firebase";
