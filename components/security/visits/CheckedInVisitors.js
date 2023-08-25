@@ -4,11 +4,13 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { collectionGroup, query, where, onSnapshot } from "firebase/firestore";
 
 import Feather from "react-native-vector-icons/Feather";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { db } from "../../../firebase";
 
@@ -69,7 +71,35 @@ export default CheckedInVisitors = () => {
   };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
+      {isLoading && (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: "rgba(0,0,0,0.4)",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          ]}
+        >
+          <ActivityIndicator color="#fff" animating size="large" />
+        </View>
+      )}
+
+      {isDataFetched && registeredVisitorsData.length === 0 && (
+        <View style={styles.noDataContainer}>
+          <Text style={styles.noDataText}>
+            No checked in visitors currently.
+          </Text>
+          <MaterialCommunityIcons
+            name="note-remove-outline"
+            size={130}
+            color={"black"}
+          />
+        </View>
+      )}
+
       <FlatList
         style={styles.container}
         data={registeredVisitorsData}
@@ -152,7 +182,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   noDataContainer: {
-    flex: 1,
+    height: "100%",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
@@ -161,6 +191,7 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   noDataText: {
+    textAlign: "center",
     fontFamily: "DMRegular",
     fontSize: 25,
   },
