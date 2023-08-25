@@ -31,7 +31,8 @@ const RegisteredVisitsToday = () => {
       const q = query(
         collectionGroup(db, "userRegisteredVisitors"),
         where("visitorVisitDateTime", ">=", startOfToday),
-        where("visitorVisitDateTime", "<=", endOfToday)
+        where("visitorVisitDateTime", "<=", endOfToday),
+        where("isCheckedIn", "==", false)
       );
 
       const unsubscribe = await onSnapshot(
