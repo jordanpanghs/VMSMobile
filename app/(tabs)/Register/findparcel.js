@@ -128,7 +128,7 @@ export default findParcel = () => {
   handleRegisterParcel = async () => {
     if (parcelData.hasArrived && parcelData.isClaimed) {
       router.back();
-      alert("Parcel has already been redeemed!");
+      alert("Error. Parcel has already been redeemed!");
       return;
     }
 

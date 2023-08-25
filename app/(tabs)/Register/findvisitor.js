@@ -94,7 +94,12 @@ export default findVisitor = () => {
     }
   };
 
-  handleCheckInVisitor = async () => {
+  handleVisitor = async () => {
+    if (visitorData.hasVisited) {
+      router.back();
+      return alert("Error. Visitation is already completed!");
+    }
+
     setIsLoading(true);
     const userDocRef = doc(db, "users", userID);
     const userRegisteredVisitorsRef = collection(
@@ -214,7 +219,7 @@ export default findVisitor = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.buttonConfirm}
-              onPress={() => handleCheckInVisitor()}
+              onPress={() => handleVisitor()}
             >
               <Ionicons name="checkmark" size={24} color="white" />
             </TouchableOpacity>
