@@ -78,6 +78,7 @@ export default function UnclaimedParcels() {
       params: {
         documentID: parcel.id,
         parcelReceiverName: parcel.parcelReceiverName,
+        parcelReceiverIC: parcel.parcelReceiverIC,
         parcelReceiverTelNo: parcel.parcelReceiverTelNo,
         parcelTrackingNumber: parcel.parcelTrackingNumber,
         parcelReceiverUnit: parcel.parcelReceiverUnit,

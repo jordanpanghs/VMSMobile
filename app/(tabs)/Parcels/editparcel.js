@@ -24,6 +24,9 @@ const EditVisitor = () => {
   const [parcelReceiverName, setParcelReceiverName] = useState(
     params.parcelReceiverName
   );
+  const [parcelReceiverIC, setParcelReceiverIC] = useState(
+    params.parcelReceiverIC
+  );
   const [parcelReceiverTelNo, setParcelReceiverTelNo] = useState(
     params.parcelReceiverTelNo
   );
@@ -43,6 +46,7 @@ const EditVisitor = () => {
 
     if (
       parcelReceiverName.trim() === "" ||
+      parcelReceiverIC.trim() === "" ||
       parcelReceiverTelNo.trim() === "" ||
       parcelTrackingNumber.trim() === "" ||
       parcelReceiverUnit.trim() === ""
@@ -61,6 +65,7 @@ const EditVisitor = () => {
 
       await updateDoc(parcelDocRef, {
         parcelReceiverName: parcelReceiverName,
+        parcelReceiverIC: parcelReceiverIC,
         parcelReceiverTelNo: parcelReceiverTelNo,
         parcelTrackingNumber: parcelTrackingNumber,
         parcelReceiverUnit: parcelReceiverUnit,
@@ -94,6 +99,18 @@ const EditVisitor = () => {
               setParcelReceiverName(
                 text.replace(/[^a-zA-Z\s]/g, "").toUpperCase()
               )
+            }
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Receiver IC Number</Text>
+          <TextInput
+            selectionColor="#007aff"
+            keyboardType="numeric"
+            style={styles.input}
+            value={parcelReceiverIC}
+            onChangeText={(text) =>
+              setParcelReceiverIC(text.replace(/[^0-9]/g, "").toUpperCase())
             }
           />
         </View>
