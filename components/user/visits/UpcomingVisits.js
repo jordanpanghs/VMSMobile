@@ -182,7 +182,7 @@ export default function UpcomingVisits() {
                 <Text style={styles.dataText}>
                   {visitor.visitorVisitPurpose}
                 </Text>
-                {visitor.isCheckedIn && (
+                {visitor.isCheckedIn ? (
                   <View>
                     <TouchableOpacity
                       style={{
@@ -211,6 +211,17 @@ export default function UpcomingVisits() {
                       </View>
                     </TouchableOpacity>
                   </View>
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontFamily: "DMBold",
+                      color: "#007AFF",
+                      paddingTop: 20,
+                    }}
+                  >
+                    Awaiting Visitor's Check In
+                  </Text>
                 )}
               </View>
               <View
@@ -277,6 +288,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   visitorDataContainer: {
+    width: "70%",
     padding: 20,
   },
   dataText: {
