@@ -18,7 +18,6 @@ import {
 } from "firebase/firestore";
 
 import Feather from "react-native-vector-icons/Feather";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { db } from "../../../firebase";
@@ -114,17 +113,6 @@ export default function UpcomingVisits() {
         },
       ]
     );
-  };
-
-  const handleShowQR = (visitor) => {
-    router.push({
-      pathname: "/visits/qrcode",
-      params: {
-        documentID: visitor.id,
-        userID: currentUser.uid,
-        visitorName: visitor.visitorName,
-      },
-    });
   };
 
   const handleShowVisitorLicense = (visitor) => {
@@ -261,15 +249,6 @@ export default function UpcomingVisits() {
                   padding: 20,
                 }}
               >
-                <View style={{ paddingBottom: 10 }}>
-                  <TouchableOpacity onPress={() => handleShowQR(visitor)}>
-                    <Ionicons
-                      name="qr-code-outline"
-                      size={60}
-                      color={"#1c1c1e"}
-                    />
-                  </TouchableOpacity>
-                </View>
                 {!visitor.isCheckedIn && (
                   <View style={styles.iconContainer}>
                     <TouchableOpacity
@@ -318,7 +297,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   visitorDataContainer: {
-    width: "70%",
     padding: 20,
   },
   dataText: {
