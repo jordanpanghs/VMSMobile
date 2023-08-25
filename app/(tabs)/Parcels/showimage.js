@@ -7,7 +7,12 @@ export default showimage = () => {
   const params = useLocalSearchParams();
   return (
     <View style={{ flex: 1 }}>
-      <Stack.Screen options={{ headerTitle: params.headerTitle }} />
+      <Stack.Screen
+        options={{
+          headerTitle: params.headerTitle,
+          animation: "slide_from_right",
+        }}
+      />
       <Image
         source={{
           uri: params.imageURL,
