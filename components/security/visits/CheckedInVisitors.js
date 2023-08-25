@@ -7,14 +7,19 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { collectionGroup, query, where, onSnapshot } from "firebase/firestore";
-import { startOfDay, endOfDay } from "date-fns";
+
+import Feather from "react-native-vector-icons/Feather";
 
 import { db } from "../../../firebase";
+
+import { useRouter } from "expo-router";
 
 export default CheckedInVisitors = () => {
   const [registeredVisitorsData, setRegisteredVisitorData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDataFetched, setIsDataFetched] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!isDataFetched) {
@@ -51,11 +56,16 @@ export default CheckedInVisitors = () => {
     } catch (error) {
       console.log(error);
     }
+  };
 
-    // const querySnapshot = await getDocs(q);
-    // querySnapshot.forEach((doc) => {
-    //   console.log(doc.id, " => ", doc.data());
-    // });
+  const handleShowVisitorLicense = (visitor) => {
+    router.push({
+      pathname: "/visits/showimage",
+      params: {
+        imageURL: encodeURIComponent(visitor.driversLicenseImageURL),
+        headerTitle: "Visitor's Driver License",
+      },
+    });
   };
 
   return (
@@ -75,14 +85,32 @@ export default CheckedInVisitors = () => {
               <Text style={styles.dataText}>{visitor.date}</Text>
               <Text style={styles.dataText}>{visitor.visitorVisitPurpose}</Text>
               <Text style={styles.dataText}>{visitor.visitorVisitingUnit}</Text>
+
+              <View>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 5,
+                    paddingTop: 20,
+                  }}
+                  onPress={() => handleShowVisitorLicense(visitor)}
+                >
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontFamily: "DMBold",
+                      color: "green",
+                    }}
+                  >
+                    Visitor Has Checked In
+                  </Text>
+                  <View>
+                    <Feather name="external-link" size={25} color={"green"} />
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View
-              style={{
-                flexDirection: "column",
-                alignItems: "center",
-                padding: 20,
-              }}
-            ></View>
           </View>
         )}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
@@ -113,6 +141,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   visitorDataContainer: {
+    width: "100%",
     padding: 20,
   },
   dataText: {
