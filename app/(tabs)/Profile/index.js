@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { Component } from "react";
 
 import { useAuth } from "../../../context/AuthContext";
@@ -10,24 +10,37 @@ export default function Profile() {
     logout();
   }
 
-  function handlePress() {
-    console.log(currentUser.uid);
-    console.log(userIsSecurity);
-    console.log(userResidentUnit);
-  }
-
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
-        gap: 100,
+        padding: 20,
       }}
     >
-      <Text>Hello, {currentUser.displayName}</Text>
-      <Text onPress={handlePress}>Console Log User</Text>
-      <Text onPress={handleLogOut}>Log Out!</Text>
+      <View>
+        <Text>Hello, {currentUser.displayName}</Text>
+      </View>
+
+      <TouchableOpacity style={styles.button} onPress={() => handleLogOut()}>
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: "#007AFF",
+    borderRadius: 5,
+    padding: 10,
+    alignItems: "center",
+    gap: 5,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 20,
+    fontFamily: "DMBold",
+  },
+});
