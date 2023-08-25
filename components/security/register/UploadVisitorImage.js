@@ -98,7 +98,10 @@ export default function UploadVisitorImage(props) {
       }
     }
 
-    if (props.detectionType === "carPlate") {
+    if (
+      props.detectionType === "carPlate" ||
+      props.detectionType === "exitImage"
+    ) {
       let plateNo = props.plateNo;
       //Remove all whitespace from all combined recognized texts from API
       //and compare with the plate number registered by the resident
@@ -180,6 +183,8 @@ export default function UploadVisitorImage(props) {
             ? "Visitor's Driver's License"
             : props.detectionType === "carPlate"
             ? "Visitor's Car Plate Number"
+            : props.detectionType === "exitImage"
+            ? "Visitor's Exit Car Image"
             : "Error. Detection Type Not Specified"}
         </Text>
 

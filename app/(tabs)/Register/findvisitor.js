@@ -29,6 +29,7 @@ export default findVisitor = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [plateImage, setPlateImage] = useState("");
   const [licenseImage, setLicenseImage] = useState("");
+  const [exitImage, setExitImage] = useState("");
 
   const params = useLocalSearchParams();
   const data = JSON.parse(params.qrData);
@@ -40,6 +41,10 @@ export default findVisitor = () => {
   useEffect(() => {
     try {
       fetchData();
+      if (visitorData.hasVisited) {
+        router.back();
+        alert("Visitor has already visited!");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -77,7 +82,11 @@ export default findVisitor = () => {
     const storageRef =
       imageType === "licenseImage"
         ? ref(storage, `visitorDriverLicense/${filename}`)
-        : ref(storage, `visitorCarPlate/${filename}`);
+        : imageType === "plateImage"
+        ? ref(storage, `visitorCarPlate/${filename}`)
+        : imageType === "exitImage"
+        ? ref(storage, `visitorExitImage/${filename}`)
+        : null;
 
     try {
       await uploadBytes(storageRef, blob);
@@ -90,11 +99,6 @@ export default findVisitor = () => {
   };
 
   handleCheckInVisitor = async () => {
-    if (visitorData.isCheckedIn) {
-      router.back();
-      alert("Visitor has already checked in!");
-      return;
-    }
     setIsLoading(true);
     const userDocRef = doc(db, "users", userID);
     const userRegisteredVisitorsRef = collection(
@@ -103,23 +107,42 @@ export default findVisitor = () => {
     );
     const visitorDocRef = doc(userRegisteredVisitorsRef, documentID);
 
-    try {
-      const driversLicenseImageURL = await uploadImage(
-        licenseImage,
-        "licenseImage"
-      );
-      const carPlateImageURL = await uploadImage(plateImage, "plateImage");
-      await updateDoc(visitorDocRef, {
-        isCheckedIn: true,
-        entryTime: new Date().toISOString(),
-        driversLicenseImageURL: driversLicenseImageURL,
-        carPlateImageURL: carPlateImageURL,
-      });
-      setIsLoading(false);
-      router.back();
-      alert("Visitor Checked In!");
-    } catch (error) {
-      console.log(error);
+    if (!visitorData.isCheckedIn && !visitorData.isCheckedOut) {
+      try {
+        const driversLicenseImageURL = await uploadImage(
+          licenseImage,
+          "licenseImage"
+        );
+        const carPlateImageURL = await uploadImage(plateImage, "plateImage");
+        await updateDoc(visitorDocRef, {
+          isCheckedIn: true,
+          entryTime: new Date().toISOString(),
+          driversLicenseImageURL: driversLicenseImageURL,
+          carPlateImageURL: carPlateImageURL,
+        });
+        setIsLoading(false);
+        router.back();
+        return alert("Visitor Checked In!");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (visitorData.isCheckedIn && !visitorData.isCheckedOut) {
+      try {
+        const exitImageURL = await uploadImage(exitImage, "exitImage");
+        await updateDoc(visitorDocRef, {
+          hasVisited: true,
+          isCheckedOut: true,
+          exitTime: new Date().toISOString(),
+          visitorExitImageURL: exitImageURL,
+        });
+        setIsLoading(false);
+        router.back();
+        return alert("Visitor Checked Out!");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -154,12 +177,23 @@ export default findVisitor = () => {
           setImageLocation={setLicenseImage}
           setIsLoading={setIsLoading}
         />
-        <UploadVisitorImage
-          detectionType={"carPlate"}
-          plateNo={visitorData.visitorCarPlate}
-          setImageLocation={setPlateImage}
-          setIsLoading={setIsLoading}
-        />
+
+        {/* If visitor is not checked in , render upload car plate , if not render upload exit car image */}
+        {!visitorData.isCheckedIn ? (
+          <UploadVisitorImage
+            detectionType={"carPlate"}
+            plateNo={visitorData.visitorCarPlate}
+            setImageLocation={setPlateImage}
+            setIsLoading={setIsLoading}
+          />
+        ) : (
+          <UploadVisitorImage
+            detectionType={"exitImage"}
+            plateNo={visitorData.visitorCarPlate}
+            setImageLocation={setExitImage}
+            setIsLoading={setIsLoading}
+          />
+        )}
 
         <View style={styles.confirmationContainer}>
           <View>
