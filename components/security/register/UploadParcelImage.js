@@ -23,7 +23,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 
-export default function RegisterParcel(props) {
+export default function UploadParcelImage(props) {
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState("");
 

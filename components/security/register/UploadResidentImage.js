@@ -35,7 +35,7 @@ const imgDir = FileSystem.documentDirectory + "images/";
 //   }
 // };
 
-export default function UploadVisitorImage(props) {
+export default function UploadResidentImage(props) {
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState("");
   const [fileURL, setfileURL] = useState("");
