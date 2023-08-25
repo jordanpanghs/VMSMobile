@@ -66,7 +66,7 @@ export default CheckedInVisitors = () => {
         keyExtractor={(visitor) => visitor.id.toString()}
         contentContainerStyle={{ paddingBottom: 40 }}
         renderItem={({ item: visitor }) => (
-          <TouchableOpacity style={styles.visitorsContainer}>
+          <View style={styles.visitorsContainer}>
             <View style={styles.visitorDataContainer}>
               <Text style={styles.dataText}>{visitor.visitorName}</Text>
               <Text style={styles.dataText}>{visitor.visitorIC}</Text>
@@ -83,7 +83,7 @@ export default CheckedInVisitors = () => {
                 padding: 20,
               }}
             ></View>
-          </TouchableOpacity>
+          </View>
         )}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
       />
