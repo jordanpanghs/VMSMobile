@@ -22,13 +22,17 @@ export default function Profile() {
       <View style={styles.textContainer}>
         <View style={styles.unitTextContainer}>
           <Text style={styles.text}>Hello, </Text>
-          <Text style={styles.text}>{currentUser.displayName}</Text>
+          <Text style={styles.text}>
+            {!userIsSecurity ? currentUser.displayName : "Security"}
+          </Text>
         </View>
 
-        <View style={styles.unitTextContainer}>
-          <Text style={styles.text}>Unit No.</Text>
-          <Text style={styles.text}>{userResidentUnit}</Text>
-        </View>
+        {!userIsSecurity && (
+          <View style={styles.unitTextContainer}>
+            <Text style={styles.text}>Unit No.</Text>
+            <Text style={styles.text}>{userResidentUnit}</Text>
+          </View>
+        )}
       </View>
 
       <TouchableOpacity style={styles.button} onPress={() => handleLogOut()}>
