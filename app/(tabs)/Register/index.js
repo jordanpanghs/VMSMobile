@@ -32,6 +32,7 @@ export default function Home() {
 
   return (
     <Tab.Navigator>
+      {/* Security Registration Page */}
       {currentUser && userIsSecurity && (
         <Tab.Screen
           name="Check In / Check Out Visitor"
@@ -44,6 +45,8 @@ export default function Home() {
           component={RegisterParcel}
         />
       )}
+
+      {/* User Registration Page */}
       {currentUser && !userIsSecurity && (
         <Tab.Screen name="Register Visitor" component={RegisterVisitorScreen} />
       )}
