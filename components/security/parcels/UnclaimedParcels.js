@@ -88,7 +88,7 @@ export default function UnclaimedParcels() {
 
       {isDataFetched && registeredParcelsData.length === 0 && (
         <View style={styles.noDataContainer}>
-          <Text style={styles.noParcelText}>No registered parcels found.</Text>
+          <Text style={styles.noParcelText}>No unclaimed parcels found.</Text>
           <Text style={styles.noParcelText}>Register a new one!</Text>
           <MaterialCommunityIcons
             name="archive-off-outline"
