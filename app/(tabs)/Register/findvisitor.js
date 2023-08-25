@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 
 import UploadVisitorImage from "../../../components/security/register/UploadVisitorImage";
 
@@ -41,10 +41,6 @@ export default findVisitor = () => {
   useEffect(() => {
     try {
       fetchData();
-      if (visitorData.hasVisited) {
-        router.back();
-        alert("Visitor has already visited!");
-      }
     } catch (error) {
       console.log(error);
     }
@@ -148,6 +144,13 @@ export default findVisitor = () => {
 
   return (
     <ScrollView>
+      <Stack.Screen
+        options={{
+          headerTitle: !visitorData.isCheckedIn
+            ? "Check In Visitor"
+            : "Check Out Visitor",
+        }}
+      />
       <View style={styles.container}>
         <View style={styles.textContainer}>
           <Text style={styles.textLabel}>{"Visitor's Name:"}</Text>

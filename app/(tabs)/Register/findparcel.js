@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 
 import {
   collection,
@@ -169,6 +169,13 @@ export default findParcel = () => {
 
   return (
     <ScrollView>
+      <Stack.Screen
+        options={{
+          headerTitle: parcelData.hasArrived
+            ? "Redeem Parcel"
+            : "Register Parcel",
+        }}
+      />
       <View style={styles.container}>
         <View style={styles.textContainer}>
           <Text style={styles.textLabel}>{"Parcel Tracking Number"}</Text>
