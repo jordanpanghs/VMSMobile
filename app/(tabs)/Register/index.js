@@ -33,7 +33,10 @@ export default function Home() {
   return (
     <Tab.Navigator>
       {currentUser && userIsSecurity && (
-        <Tab.Screen name="Register Visitor" component={RegisterVisitor} />
+        <Tab.Screen
+          name="Check In / Check Out Visitor"
+          component={RegisterVisitor}
+        />
       )}
       {currentUser && userIsSecurity && (
         <Tab.Screen
