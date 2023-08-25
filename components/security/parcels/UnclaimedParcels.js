@@ -14,15 +14,12 @@ import Feather from "react-native-vector-icons/Feather";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { db } from "../../../firebase";
-import { useAuth } from "../../../context/AuthContext";
 import { useRouter } from "expo-router";
 
 export default function UnclaimedParcels() {
   const [registeredParcelsData, setRegisteredParcelsData] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  const { currentUser } = useAuth();
 
   const router = useRouter();
 
