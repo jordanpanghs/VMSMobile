@@ -18,7 +18,7 @@ import { useAuth } from "../../../context/AuthContext";
 function RegisterNewParcel() {
   const [parcelReceiverName, setParcelReceiverName] = useState("");
   const [parcelReceiverTelNo, setParcelReceiverTelNo] = useState("");
-
+  const [parcelReceiverIC, setParcelReceiverIC] = useState("");
   const [parcelTrackingNumber, setParcelTrackingNumber] = useState("");
 
   const { currentUser, userResidentUnit } = useAuth();
@@ -27,6 +27,7 @@ function RegisterNewParcel() {
     if (
       parcelReceiverName.trim() === "" ||
       parcelReceiverTelNo.trim() === "" ||
+      parcelReceiverIC.trim() === "" ||
       parcelTrackingNumber.trim() === ""
     ) {
       alert("Please fill in all required fields");
@@ -41,6 +42,7 @@ function RegisterNewParcel() {
 
     addDoc(userRegisteredParcelsRef, {
       parcelReceiverName: parcelReceiverName,
+      parcelReceiverIC: parcelReceiverIC,
       parcelReceiverTelNo: parcelReceiverTelNo,
       parcelReceiverUnit: userResidentUnit,
       parcelTrackingNumber: parcelTrackingNumber,
@@ -69,6 +71,18 @@ function RegisterNewParcel() {
               setParcelReceiverName(
                 text.replace(/[^a-zA-Z\s]/g, "").toUpperCase()
               )
+            }
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Receiver IC Number</Text>
+          <TextInput
+            selectionColor="#007aff"
+            keyboardType="numeric"
+            style={styles.input}
+            value={parcelReceiverIC}
+            onChangeText={(text) =>
+              setParcelReceiverIC(text.replace(/[^0-9]/g, "").toUpperCase())
             }
           />
         </View>

@@ -33,12 +33,15 @@ import { db } from "../../../firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import UploadParcelImage from "../../../components/security/register/UploadParcelImage";
+import UploadResidentImage from "../../../components/security/register/UploadResidentImage";
 
 export default findParcel = () => {
   const [parcelData, setParcelData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [documentRef, setDocumentRef] = useState("");
+
   const [parcelImage, setParcelImage] = useState("");
+  const [icImage, seticImage] = useState("");
 
   const params = useLocalSearchParams();
   const parcelTrackingNumber = params.qrData;
@@ -101,26 +104,66 @@ export default findParcel = () => {
     setIsLoading(false);
   };
 
-  handleRegisterParcel = async () => {
-    if (parcelData.hasArrived) {
-      router.back();
-      alert("Parcel has already been registered!");
-      return;
-    }
+  const uploadICImage = async (uri) => {
     setIsLoading(true);
 
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const filename = documentRef.id;
+
+    const storage = getStorage();
+    const storageRef = ref(storage, `parcelRedeemerIC/${filename}`);
+
     try {
-      const imageURL = await uploadImage(parcelImage);
-      await updateDoc(documentRef, {
-        hasArrived: true,
-        arrivalTime: new Date().toISOString(),
-        imageURL: imageURL,
-      });
-      setIsLoading(false);
+      await uploadBytes(storageRef, blob);
+      const imageURL = await getDownloadURL(storageRef);
+      return imageURL;
+    } catch (e) {
+      console.log(e);
+    }
+
+    setIsLoading(false);
+  };
+
+  handleRegisterParcel = async () => {
+    if (parcelData.hasArrived && parcelData.isClaimed) {
       router.back();
-      alert("Parcel registered!");
-    } catch (error) {
-      console.log(error);
+      alert("Parcel has already been redeemed!");
+      return;
+    }
+
+    setIsLoading(true);
+
+    if (parcelData.hasArrived) {
+      try {
+        const imageURL = await uploadICImage(icImage);
+        await updateDoc(documentRef, {
+          isClaimed: true,
+          claimTime: new Date().toISOString(),
+          redeemerICImageURL: imageURL,
+        });
+        setIsLoading(false);
+        router.back();
+        alert("Parcel Set As Redeemed!");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (!parcelData.hasArrived) {
+      try {
+        const imageURL = await uploadImage(parcelImage);
+        await updateDoc(documentRef, {
+          hasArrived: true,
+          arrivalTime: new Date().toISOString(),
+          parcelImageURL: imageURL,
+        });
+        setIsLoading(false);
+        router.back();
+        alert("Parcel registered!");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -136,6 +179,10 @@ export default findParcel = () => {
           <Text style={styles.text}>{parcelData.parcelReceiverName}</Text>
         </View>
         <View style={styles.textContainer}>
+          <Text style={styles.textLabel}>{"Parcel Receiver IC Number:"}</Text>
+          <Text style={styles.text}>{parcelData.parcelReceiverIC}</Text>
+        </View>
+        <View style={styles.textContainer}>
           <Text style={styles.textLabel}>
             {"Parcel Receiver Telephone Number:"}
           </Text>
@@ -148,7 +195,18 @@ export default findParcel = () => {
           <Text style={styles.text}>{parcelData.parcelReceiverUnit}</Text>
         </View>
 
-        <UploadParcelImage setImageLocation={setParcelImage} />
+        {!parcelData.hasArrived && (
+          <UploadParcelImage setImageLocation={setParcelImage} />
+        )}
+
+        {parcelData.hasArrived && (
+          <UploadResidentImage
+            name={parcelData.parcelReceiverName}
+            icNo={parcelData.parcelReceiverIC}
+            setImageLocation={seticImage}
+            setIsLoading={setIsLoading}
+          />
+        )}
 
         <View style={styles.confirmationContainer}>
           <View>
@@ -164,12 +222,22 @@ export default findParcel = () => {
             >
               <Ionicons name="close" size={24} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonConfirm}
-              onPress={() => handleRegisterParcel()}
-            >
-              <Ionicons name="checkmark" size={24} color="white" />
-            </TouchableOpacity>
+            {!parcelData.hasArrived && (
+              <TouchableOpacity
+                style={styles.buttonConfirm}
+                onPress={() => handleRegisterParcel()}
+              >
+                <Ionicons name="checkmark" size={24} color="white" />
+              </TouchableOpacity>
+            )}
+            {parcelData.hasArrived && (
+              <TouchableOpacity
+                style={styles.buttonConfirm}
+                onPress={() => handleRegisterParcel()}
+              >
+                <Ionicons name="checkmark" size={24} color="white" />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>

@@ -66,7 +66,7 @@ export default function UnclaimedParcels() {
     router.push({
       pathname: "/parcels/showparcel",
       params: {
-        imageURL: encodeURIComponent(parcel.imageURL),
+        imageURL: encodeURIComponent(parcel.parcelImageURL),
       },
     });
   };

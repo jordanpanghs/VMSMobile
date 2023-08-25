@@ -28,31 +28,10 @@ import {
 
 const imgDir = FileSystem.documentDirectory + "images/";
 
-// const ensureDirExists = async () => {
-//   const dirInfo = await FileSystem.getInfoAsync(imgDir);
-//   if (!dirInfo.exists) {
-//     await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true });
-//   }
-// };
-
 export default function UploadResidentImage(props) {
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState("");
   const [fileURL, setfileURL] = useState("");
-
-  // Load images on startup
-  //   useEffect(() => {
-  //     loadImages();
-  //   }, []);
-
-  // Load images from file system
-  //   const loadImages = async () => {
-  //     await ensureDirExists();
-  //     const files = await FileSystem.readDirectoryAsync(imgDir);
-  //     if (files.length > 0) {
-  //       setImages(files.map((f) => imgDir + f));
-  //     }
-  //   };
 
   // Select image from library or camera
   const selectImage = async (useLibrary) => {
@@ -79,10 +58,6 @@ export default function UploadResidentImage(props) {
 
   // Save image to file system
   const saveImage = async (uri) => {
-    // await ensureDirExists();
-    // const filename = new Date().getTime() + ".jpeg";
-    // const dest = imgDir + filename;
-    // await FileSystem.copyAsync({ from: uri, to: dest });
     props.setImageLocation(uri);
     setfileURL(uri); //Test function
     setImage(uri);
@@ -94,62 +69,38 @@ export default function UploadResidentImage(props) {
     const str = resultsArray[0];
 
     console.log(str);
+    //Remove all whitespace from passed in value and recognized texts from API
+    //and compare with the plate number registered by the resident
+    let name = props.name.replace(/\s/g, "");
+    const isNameMatch = str.replace(/\s/g, "").includes(name);
 
-    if (props.detectionType === "driversLicense") {
-      //Remove all whitespace from passed in value and recognized texts from API
-      //and compare with the plate number registered by the resident
-      let name = props.name.replace(/\s/g, "");
-      const isNameMatch = str.replace(/\s/g, "").includes(name);
+    let icNo = props.icNo.replace(/\s/g, "");
+    const isICNoMatch = str.replace(/\s/g, "").includes(icNo);
 
-      let icNo = props.icNo.replace(/\s/g, "");
-      const isICNoMatch = str.replace(/\s/g, "").includes(icNo);
-
-      if (isNameMatch && isICNoMatch) {
-        Alert.alert(
-          "Success!",
-          "Both visitor name and ic number matches with registered data!"
-        );
-        props.setIsLoading(false);
-      } else if (isNameMatch && !isICNoMatch) {
-        Alert.alert(
-          "Partical Success",
-          "Visitor's name matches but IC number does not match with registered data!"
-        );
-        props.setIsLoading(false);
-      } else if (!isNameMatch && isICNoMatch) {
-        Alert.alert(
-          "Partical Success",
-          "Visitor's IC number matches but name does not match with registered data!"
-        );
-        props.setIsLoading(false);
-      } else {
-        Alert.alert(
-          "Failed!",
-          "Both visitor name and ic number does not match with registered data!"
-        );
-        props.setIsLoading(false);
-      }
-    }
-
-    if (props.detectionType === "carPlate") {
-      let plateNo = props.plateNo;
-      //Remove all whitespace from all combined recognized texts from API
-      //and compare with the plate number registered by the resident
-      const isCarPlateMatch = str.replace(/\s/g, "").includes(plateNo);
-
-      if (isCarPlateMatch) {
-        Alert.alert(
-          "Success!",
-          "Car license plate matches with registered data!"
-        );
-        props.setIsLoading(false);
-      } else {
-        Alert.alert(
-          "Failed!",
-          "Car license plate does not match with registered data!"
-        );
-        props.setIsLoading(false);
-      }
+    if (isNameMatch && isICNoMatch) {
+      Alert.alert(
+        "Success!",
+        "Both name and ic number matches with registered data!"
+      );
+      props.setIsLoading(false);
+    } else if (isNameMatch && !isICNoMatch) {
+      Alert.alert(
+        "Partial Success",
+        "Name matches but IC number does not match with registered data!"
+      );
+      props.setIsLoading(false);
+    } else if (!isNameMatch && isICNoMatch) {
+      Alert.alert(
+        "Partial Success",
+        "IC number matches but name does not match with registered data!"
+      );
+      props.setIsLoading(false);
+    } else {
+      Alert.alert(
+        "Failed!",
+        "Both name and ic number does not match with registered data!"
+      );
+      props.setIsLoading(false);
     }
   };
 
@@ -208,12 +159,7 @@ export default function UploadResidentImage(props) {
             paddingTop: 30,
           }}
         >
-          Upload or Capture Image of{" "}
-          {props.detectionType === "driversLicense"
-            ? "Visitor's Driver's License"
-            : props.detectionType === "carPlate"
-            ? "Visitor's Car Plate Number"
-            : "Error. Detection Type Not Specified"}
+          Upload or Capture Image of Redeemer's Identity Card
         </Text>
 
         {image && (
