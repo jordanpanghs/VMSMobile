@@ -51,7 +51,7 @@ function RegisterNewParcel() {
     }).then(() => {
       setParcelReceiverName("");
       setParcelReceiverTelNo("");
-
+      setParcelReceiverIC("");
       setParcelTrackingNumber("");
       alert("Added successfully");
     });
