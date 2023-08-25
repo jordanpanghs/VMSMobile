@@ -18,41 +18,12 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import axios from "axios";
 
-import {
-  getStorage,
-  ref,
-  uploadString,
-  getDownloadURL,
-  uploadBytes,
-} from "firebase/storage";
-
 const imgDir = FileSystem.documentDirectory + "images/";
-
-// const ensureDirExists = async () => {
-//   const dirInfo = await FileSystem.getInfoAsync(imgDir);
-//   if (!dirInfo.exists) {
-//     await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true });
-//   }
-// };
 
 export default function UploadVisitorImage(props) {
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState("");
   const [fileURL, setfileURL] = useState("");
-
-  // Load images on startup
-  //   useEffect(() => {
-  //     loadImages();
-  //   }, []);
-
-  // Load images from file system
-  //   const loadImages = async () => {
-  //     await ensureDirExists();
-  //     const files = await FileSystem.readDirectoryAsync(imgDir);
-  //     if (files.length > 0) {
-  //       setImages(files.map((f) => imgDir + f));
-  //     }
-  //   };
 
   // Select image from library or camera
   const selectImage = async (useLibrary) => {
@@ -79,10 +50,6 @@ export default function UploadVisitorImage(props) {
 
   // Save image to file system
   const saveImage = async (uri) => {
-    // await ensureDirExists();
-    // const filename = new Date().getTime() + ".jpeg";
-    // const dest = imgDir + filename;
-    // await FileSystem.copyAsync({ from: uri, to: dest });
     props.setImageLocation(uri);
     setfileURL(uri); //Test function
     setImage(uri);
@@ -112,13 +79,13 @@ export default function UploadVisitorImage(props) {
         props.setIsLoading(false);
       } else if (isNameMatch && !isICNoMatch) {
         Alert.alert(
-          "Partical Success",
+          "Partial Success",
           "Visitor's name matches but IC number does not match with registered data!"
         );
         props.setIsLoading(false);
       } else if (!isNameMatch && isICNoMatch) {
         Alert.alert(
-          "Partical Success",
+          "Partial Success",
           "Visitor's IC number matches but name does not match with registered data!"
         );
         props.setIsLoading(false);
