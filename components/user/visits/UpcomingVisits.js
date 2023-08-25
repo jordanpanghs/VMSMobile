@@ -126,6 +126,16 @@ export default function UpcomingVisits() {
     });
   };
 
+  const handleShowVisitorLicense = (visitor) => {
+    router.push({
+      pathname: "/visits/showimage",
+      params: {
+        imageURL: encodeURIComponent(visitor.driversLicenseImageURL),
+        headerTitle: "Visitor's Driver License",
+      },
+    });
+  };
+
   return (
     <View style={{ flex: 1, flexGrow: 1 }}>
       {isLoading && (
@@ -172,6 +182,36 @@ export default function UpcomingVisits() {
                 <Text style={styles.dataText}>
                   {visitor.visitorVisitPurpose}
                 </Text>
+                {visitor.isCheckedIn && (
+                  <View>
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 5,
+                        paddingTop: 20,
+                      }}
+                      onPress={() => handleShowVisitorLicense(visitor)}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          fontFamily: "DMBold",
+                          color: "green",
+                        }}
+                      >
+                        Visitor Has Checked In
+                      </Text>
+                      <View>
+                        <Feather
+                          name="external-link"
+                          size={25}
+                          color={"green"}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
               <View
                 style={{
@@ -189,18 +229,22 @@ export default function UpcomingVisits() {
                     />
                   </TouchableOpacity>
                 </View>
-                <View style={styles.iconContainer}>
-                  <TouchableOpacity onPress={() => handleEditVisitor(visitor)}>
-                    <Feather name="edit" size={30} color={"#007AFF"} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() =>
-                      handleDeleteVisitor(visitor.visitorName, visitor.id)
-                    }
-                  >
-                    <Feather name="trash-2" size={30} color={"red"} />
-                  </TouchableOpacity>
-                </View>
+                {!visitor.isCheckedIn && (
+                  <View style={styles.iconContainer}>
+                    <TouchableOpacity
+                      onPress={() => handleEditVisitor(visitor)}
+                    >
+                      <Feather name="edit" size={30} color={"#007AFF"} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() =>
+                        handleDeleteVisitor(visitor.visitorName, visitor.id)
+                      }
+                    >
+                      <Feather name="trash-2" size={30} color={"red"} />
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
             </View>
           )}
