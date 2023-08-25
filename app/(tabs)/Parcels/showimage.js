@@ -3,11 +3,11 @@ import React from "react";
 
 import { Stack, useLocalSearchParams } from "expo-router";
 
-const showparcel = () => {
+export default showimage = () => {
   const params = useLocalSearchParams();
   return (
     <View style={{ flex: 1 }}>
-      <Stack.Screen options={{ headerTitle: "Parcel Image" }} />
+      <Stack.Screen options={{ headerTitle: params.headerTitle }} />
       <Image
         source={{
           uri: params.imageURL,
@@ -21,7 +21,5 @@ const showparcel = () => {
     </View>
   );
 };
-
-export default showparcel;
 
 const styles = StyleSheet.create({});

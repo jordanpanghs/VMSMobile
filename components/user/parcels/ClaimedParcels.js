@@ -53,6 +53,7 @@ export default function ClaimedParcels() {
         (snapshot) => {
           const updatedData = snapshot.docs.map((doc) => ({
             id: doc.id,
+            date: new Date(doc.data().claimTime).toLocaleString(),
             ...doc.data(),
           }));
           setRegisteredParcelsData(updatedData);
@@ -69,45 +70,12 @@ export default function ClaimedParcels() {
     }
   };
 
-  const handleEditParcel = async (parcel) => {
+  const handleShowParcelImage = (parcel) => {
     router.push({
-      pathname: "/parcels/editparcel",
+      pathname: "/parcels/showimage",
       params: {
-        documentID: parcel.id,
-        parcelReceiverName: parcel.parcelReceiverName,
-        parcelReceiverTelNo: parcel.parcelReceiverTelNo,
-        parcelTrackingNumber: parcel.parcelTrackingNumber,
-        parcelReceiverUnit: parcel.parcelReceiverUnit,
-      },
-    });
-  };
-
-  const handleDeleteParcel = async (documentId) => {
-    Alert.alert(
-      "Confirm Delete",
-      `Are you sure you want to delete this parcel?`,
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "OK",
-          onPress: async () => {
-            const docRef = doc(db, "registeredParcels", documentId);
-            await deleteDoc(docRef);
-            alert("Parcel deleted successfully!");
-          },
-        },
-      ]
-    );
-  };
-
-  const handleShowQR = (parcel) => {
-    router.push({
-      pathname: "/parcels/qrcode",
-      params: {
-        documentID: parcel.id,
+        imageURL: encodeURIComponent(parcel.redeemerICImageURL),
+        headerTitle: "Redeemer IC Image",
       },
     });
   };
@@ -157,7 +125,20 @@ export default function ClaimedParcels() {
                 <Text style={styles.dataText}>
                   {parcel.parcelTrackingNumber}
                 </Text>
-                <Text>Claimed by Jordan on 18/8/2023</Text>
+                <Text>Claimed on {parcel.date}</Text>
+
+                <View>
+                  <TouchableOpacity
+                    style={styles.parcelStatusContainer}
+                    onPress={() => handleShowParcelImage(parcel)}
+                    disabled={!parcel.hasArrived}
+                  >
+                    <Text style={[styles.parcelStatus]}>Parcel Redeemed</Text>
+                    <View>
+                      <Feather name="external-link" size={25} color={"green"} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           )}
@@ -211,5 +192,16 @@ const styles = StyleSheet.create({
   noParcelText: {
     fontFamily: "DMRegular",
     fontSize: 25,
+  },
+  parcelStatusContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    paddingTop: 20,
+  },
+  parcelStatus: {
+    fontSize: 15,
+    fontFamily: "DMBold",
+    color: "green",
   },
 });

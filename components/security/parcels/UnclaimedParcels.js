@@ -64,9 +64,10 @@ export default function UnclaimedParcels() {
 
   const handleShowParcelImage = (parcel) => {
     router.push({
-      pathname: "/parcels/showparcel",
+      pathname: "/parcels/showimage",
       params: {
         imageURL: encodeURIComponent(parcel.parcelImageURL),
+        headerTitle: "Unclaimed Parcel Image",
       },
     });
   };
