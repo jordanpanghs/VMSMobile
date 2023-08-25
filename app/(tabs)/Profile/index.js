@@ -19,8 +19,16 @@ export default function Profile() {
         padding: 20,
       }}
     >
-      <View>
-        <Text>Hello, {currentUser.displayName}</Text>
+      <View style={styles.textContainer}>
+        <View style={styles.unitTextContainer}>
+          <Text style={styles.text}>Hello, </Text>
+          <Text style={styles.text}>{currentUser.displayName}</Text>
+        </View>
+
+        <View style={styles.unitTextContainer}>
+          <Text style={styles.text}>Unit No.</Text>
+          <Text style={styles.text}>{userResidentUnit}</Text>
+        </View>
       </View>
 
       <TouchableOpacity style={styles.button} onPress={() => handleLogOut()}>
@@ -31,6 +39,19 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
+  textContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 30,
+  },
+  unitTextContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontFamily: "DMRegular",
+    fontSize: 30,
+  },
   button: {
     backgroundColor: "#007AFF",
     borderRadius: 5,
