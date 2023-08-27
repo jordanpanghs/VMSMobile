@@ -5,6 +5,21 @@
       "bundler": "metro"
     },
     "name": "VMSMobile",
-    "slug": "VMSMobile"
+    "slug": "VMSMobile",
+    "extra": {
+      "eas": {
+        "projectId": "ff178dd2-fd65-437b-9b80-a4a8789ba681"
+      }
+    },
+    "android": {
+      "package": "com.jordanpang.VMSMobile"
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/ff178dd2-fd65-437b-9b80-a4a8789ba681"
+    },
+    "ios": {}
   }
 }
