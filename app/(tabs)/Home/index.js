@@ -108,9 +108,7 @@ async function registerForPushNotificationsAsync() {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      firebasetoken = (await Notifications.getDevicePushTokenAsync()).data;
       console.log(token);
-      console.log("firebase token  " + firebasetoken);
     } catch (e) {
       console.log(e);
     }
