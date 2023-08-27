@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "780917214141",
+    "project_id": "visitor-management-syste-3f0f7",
+    "storage_bucket": "visitor-management-syste-3f0f7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:780917214141:android:7a78de0dc06742f821e0d4",
+        "android_client_info": {
+          "package_name": "com.jordanpang.VMSMobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "780917214141-qefav0h32m2f810aq3981a3v4cmjb01i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jordanpang.VMSMobile",
+            "certificate_hash": "aed8dec38f5c67770c989a78ab9c0a6987ee0a7a"
+          }
+        },
+        {
+          "client_id": "780917214141-t5bd4b5lijkt74guvbh452ja59k3mh5v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jordanpang.VMSMobile",
+            "certificate_hash": "392fe257ead00e33b2de8eaf5eea31ba8b920348"
+          }
+        },
+        {
+          "client_id": "780917214141-jl9no13lpi8dqid9nlp9uqkqpralprot.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3tihKLZvYU6TzX7vhI7tcYjWKeKQm7UY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "780917214141-jl9no13lpi8dqid9nlp9uqkqpralprot.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Text, View, Button, Platform } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import axios from "axios";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -62,7 +63,7 @@ export default function HomeScreen() {
       <Button
         title="Press to schedule a notification"
         onPress={async () => {
-          await schedulePushNotification();
+          await sendNotification();
         }}
       />
     </View>
@@ -72,6 +73,7 @@ export default function HomeScreen() {
 async function schedulePushNotification() {
   await Notifications.scheduleNotificationAsync({
     content: {
+      to: "ExponentPushToken[RG11E7Lw8p3gFMtjtp6Q5y]",
       title: "You've got mail! 📬",
       body: "Here is the notification body",
       data: { data: "goes here" },
@@ -93,22 +95,55 @@ async function registerForPushNotificationsAsync() {
   }
 
   if (Device.isDevice) {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
+    try {
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      firebasetoken = (await Notifications.getDevicePushTokenAsync()).data;
+      console.log(token);
+      console.log("firebase token  " + firebasetoken);
+    } catch (e) {
+      console.log(e);
     }
-    if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
   } else {
     alert("Must use physical device for Push Notifications");
   }
 
   return token;
 }
+
+const sendNotification = async () => {
+  const message = {
+    to: "ExponentPushToken[RG11E7Lw8p3gFMtjtp6Q5y]",
+    title: "hello",
+    body: "world",
+  };
+
+  try {
+    const response = await axios.post(
+      "https://exp.host/--/api/v2/push/send",
+      JSON.stringify(message),
+      {
+        headers: {
+          host: "exp.host",
+          accept: "application/json",
+          "accept-encoding": "gzip, deflate",
+          "content-type": "application/json",
+        },
+      }
+    );
+
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};

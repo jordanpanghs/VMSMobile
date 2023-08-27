@@ -12,6 +12,7 @@
       }
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "package": "com.jordanpang.VMSMobile"
     },
     "runtimeVersion": {
