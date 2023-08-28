@@ -9,6 +9,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 
+import axios from "axios";
+
 import {
   collection,
   getDoc,
@@ -125,6 +127,33 @@ export default findParcel = () => {
     setIsLoading(false);
   };
 
+  const sendNotification = async (notificationTitle, notificationMessage) => {
+    const message = {
+      to: "ExponentPushToken[RG11E7Lw8p3gFMtjtp6Q5y]",
+      title: notificationTitle,
+      body: notificationMessage,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://exp.host/--/api/v2/push/send",
+        JSON.stringify(message),
+        {
+          headers: {
+            host: "exp.host",
+            accept: "application/json",
+            "accept-encoding": "gzip, deflate",
+            "content-type": "application/json",
+          },
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   handleRegisterParcel = async () => {
     if (parcelData.hasArrived && parcelData.isClaimed) {
       router.back();
@@ -142,6 +171,10 @@ export default findParcel = () => {
           claimTime: new Date().toISOString(),
           redeemerICImageURL: imageURL,
         });
+        await sendNotification(
+          "Parcel Redeemed!",
+          "Your parcel has been redeemed!"
+        );
         setIsLoading(false);
         router.back();
         alert("Parcel Set As Redeemed!");
@@ -158,6 +191,10 @@ export default findParcel = () => {
           arrivalTime: new Date().toISOString(),
           parcelImageURL: imageURL,
         });
+        await sendNotification(
+          "Parcel Received!",
+          "You have a parcel ready to be redeemed! Head over to the guard house now"
+        );
         setIsLoading(false);
         router.back();
         alert("Parcel registered!");

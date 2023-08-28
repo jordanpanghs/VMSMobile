@@ -9,6 +9,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 
+import axios from "axios";
+
 import UploadVisitorImage from "../../../components/security/register/UploadVisitorImage";
 
 import { collection, getDoc, doc, updateDoc } from "firebase/firestore";
@@ -94,6 +96,33 @@ export default findVisitor = () => {
     }
   };
 
+  const sendNotification = async (notificationTitle, notificationMessage) => {
+    const message = {
+      to: "ExponentPushToken[RG11E7Lw8p3gFMtjtp6Q5y]",
+      title: notificationTitle,
+      body: notificationMessage,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://exp.host/--/api/v2/push/send",
+        JSON.stringify(message),
+        {
+          headers: {
+            host: "exp.host",
+            accept: "application/json",
+            "accept-encoding": "gzip, deflate",
+            "content-type": "application/json",
+          },
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   handleVisitor = async () => {
     if (visitorData.hasVisited) {
       router.back();
@@ -121,6 +150,10 @@ export default findVisitor = () => {
           driversLicenseImageURL: driversLicenseImageURL,
           carPlateImageURL: carPlateImageURL,
         });
+        sendNotification(
+          "Visitor Checked In!",
+          "Your visitor has checked in at the security checkpoint."
+        );
         setIsLoading(false);
         router.back();
         return alert("Visitor Checked In!");
@@ -138,6 +171,10 @@ export default findVisitor = () => {
           exitTime: new Date().toISOString(),
           visitorExitImageURL: exitImageURL,
         });
+        sendNotification(
+          "Visitor Checked Out!",
+          "Your visitor has checked out. Visitation Complete"
+        );
         setIsLoading(false);
         router.back();
         return alert("Visitor Checked Out!");

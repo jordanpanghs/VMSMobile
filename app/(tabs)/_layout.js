@@ -26,7 +26,7 @@ export default () => {
         tabBarInactiveTintColor: "black",
       }}
     >
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="home"
         options={
           currentUser && userIsSecurity
@@ -36,7 +36,6 @@ export default () => {
                 tabBarIcon: ({ focused, color }) => {
                   return <Ionicon name="home" size={30} color={color} />;
                 },
-                href: null,
               }
             : {
                 headerTitle: "Home",
@@ -46,7 +45,7 @@ export default () => {
                 },
               }
         }
-      />
+      /> */}
       <Tabs.Screen
         name="visits"
         options={{
