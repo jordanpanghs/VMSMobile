@@ -26,26 +26,6 @@ export default () => {
         tabBarInactiveTintColor: "black",
       }}
     >
-      {/* <Tabs.Screen
-        name="home"
-        options={
-          currentUser && userIsSecurity
-            ? {
-                headerTitle: "Home",
-                tabBarLabel: "Home",
-                tabBarIcon: ({ focused, color }) => {
-                  return <Ionicon name="home" size={30} color={color} />;
-                },
-              }
-            : {
-                headerTitle: "Home",
-                tabBarLabel: "Home",
-                tabBarIcon: ({ focused, color }) => {
-                  return <Ionicon name="home" size={30} color={color} />;
-                },
-              }
-        }
-      /> */}
       <Tabs.Screen
         name="visits"
         options={{
