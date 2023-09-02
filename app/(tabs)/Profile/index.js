@@ -8,6 +8,10 @@ import { useAuth } from "../../../context/AuthContext";
 
 import { useRouter } from "expo-router";
 
+import { db } from "../../../firebase";
+
+import { doc, updateDoc } from "firebase/firestore";
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -28,7 +32,7 @@ export default function Profile() {
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
+      uploadExpoPushToken(token, currentUser)
     );
 
     notificationListener.current =
@@ -77,10 +81,6 @@ export default function Profile() {
             <Text style={styles.text}>{userResidentUnit}</Text>
           </View>
         )}
-
-        <View style={styles.unitTextContainer}>
-          <Text>{expoPushToken}</Text>
-        </View>
       </View>
 
       <TouchableOpacity style={styles.button} onPress={() => handleLogOut()}>
@@ -125,6 +125,20 @@ async function registerForPushNotificationsAsync() {
   }
 
   return token;
+}
+
+async function uploadExpoPushToken(token, currentUser) {
+  try {
+    const userDocRef = doc(db, "users", currentUser.uid);
+
+    await updateDoc(userDocRef, {
+      notificationToken: token,
+    });
+
+    console.log("Expo Push Token uploaded");
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const styles = StyleSheet.create({
