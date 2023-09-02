@@ -81,6 +81,8 @@ export default function Profile() {
             <Text style={styles.text}>{userResidentUnit}</Text>
           </View>
         )}
+
+        <Text>LMFAOOOO</Text>
       </View>
 
       <TouchableOpacity style={styles.button} onPress={() => handleLogOut()}>
