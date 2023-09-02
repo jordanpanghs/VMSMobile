@@ -59,7 +59,9 @@ export default findVisitor = () => {
     try {
       const doc = await getDoc(visitorDocRef);
       if (doc.exists()) {
-        const docData = doc.data();
+        const parentDoc = await getDoc(doc.ref.parent.parent);
+        const notificationToken = parentDoc.data().notificationToken;
+        const docData = { notificationToken, ...doc.data() };
         setVisitorData(docData);
         setIsLoading(false);
       } else {
@@ -98,7 +100,7 @@ export default findVisitor = () => {
 
   const sendNotification = async (notificationTitle, notificationMessage) => {
     const message = {
-      to: "ExponentPushToken[RG11E7Lw8p3gFMtjtp6Q5y]",
+      to: visitorData.notificationToken,
       title: notificationTitle,
       body: notificationMessage,
     };
@@ -215,22 +217,23 @@ export default findVisitor = () => {
           <Text style={styles.text}>{visitorData.visitorVisitingUnit}</Text>
         </View>
 
-        <UploadVisitorImage
-          detectionType={"driversLicense"}
-          name={visitorData.visitorName}
-          icNo={visitorData.visitorIC}
-          setImageLocation={setLicenseImage}
-          setIsLoading={setIsLoading}
-        />
-
         {/* If visitor is not checked in , render upload car plate , if not render upload exit car image */}
         {!visitorData.isCheckedIn ? (
-          <UploadVisitorImage
-            detectionType={"carPlate"}
-            plateNo={visitorData.visitorCarPlate}
-            setImageLocation={setPlateImage}
-            setIsLoading={setIsLoading}
-          />
+          <>
+            <UploadVisitorImage
+              detectionType={"carPlate"}
+              plateNo={visitorData.visitorCarPlate}
+              setImageLocation={setPlateImage}
+              setIsLoading={setIsLoading}
+            />
+            <UploadVisitorImage
+              detectionType={"driversLicense"}
+              name={visitorData.visitorName}
+              icNo={visitorData.visitorIC}
+              setImageLocation={setLicenseImage}
+              setIsLoading={setIsLoading}
+            />
+          </>
         ) : (
           <UploadVisitorImage
             detectionType={"exitImage"}
@@ -243,7 +246,9 @@ export default findVisitor = () => {
         <View style={styles.confirmationContainer}>
           <View>
             <Text style={styles.confirmationText}>
-              Confirm Check In Visitor?
+              {!visitorData.isCheckedIn
+                ? "Confirm Check In Visitor"
+                : "Confirm Check Out Visitor"}
             </Text>
           </View>
 

@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -43,6 +44,7 @@ export default findParcel = () => {
   const [documentRef, setDocumentRef] = useState("");
 
   const [parcelImage, setParcelImage] = useState("");
+  const [parcelLocationImage, setParcelLocationImage] = useState("");
   const [icImage, seticImage] = useState("");
 
   const params = useLocalSearchParams();
@@ -68,13 +70,19 @@ export default findParcel = () => {
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.size > 0) {
-        const docData = querySnapshot.docs.map((doc) => ({
-          docRef: doc.ref,
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setParcelData(docData[0]);
-        setDocumentRef(docData[0].docRef);
+        const updatedData = [];
+        for (const doc of querySnapshot.docs) {
+          const parentDoc = await getDoc(doc.ref.parent.parent);
+          const data = {
+            docRef: doc.ref,
+            id: doc.id,
+            notificationToken: parentDoc.data().notificationToken,
+            ...doc.data(),
+          };
+          updatedData.push(data);
+        }
+        setParcelData(updatedData[0]);
+        setDocumentRef(updatedData[0].docRef);
         setIsLoading(false);
       } else {
         alert("No such document!");
@@ -85,7 +93,7 @@ export default findParcel = () => {
     }
   };
 
-  const uploadImage = async (uri) => {
+  const uploadParcelImage = async (uri) => {
     setIsLoading(true);
 
     const response = await fetch(uri);
@@ -94,6 +102,27 @@ export default findParcel = () => {
 
     const storage = getStorage();
     const storageRef = ref(storage, `visitorParcelLabel/${filename}`);
+
+    try {
+      await uploadBytes(storageRef, blob);
+      const imageURL = await getDownloadURL(storageRef);
+      return imageURL;
+    } catch (e) {
+      console.log(e);
+    }
+
+    setIsLoading(false);
+  };
+
+  const uploadParcelLocationImage = async (uri) => {
+    setIsLoading(true);
+
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const filename = documentRef.id;
+
+    const storage = getStorage();
+    const storageRef = ref(storage, `visitorParcelLocation/${filename}`);
 
     try {
       await uploadBytes(storageRef, blob);
@@ -129,7 +158,7 @@ export default findParcel = () => {
 
   const sendNotification = async (notificationTitle, notificationMessage) => {
     const message = {
-      to: "ExponentPushToken[RG11E7Lw8p3gFMtjtp6Q5y]",
+      to: parcelData.notificationToken,
       title: notificationTitle,
       body: notificationMessage,
     };
@@ -147,8 +176,6 @@ export default findParcel = () => {
           },
         }
       );
-
-      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -185,11 +212,15 @@ export default findParcel = () => {
 
     if (!parcelData.hasArrived) {
       try {
-        const imageURL = await uploadImage(parcelImage);
+        const parcelLabelImageURL = await uploadParcelImage(parcelImage);
+        const parcelLocationImageURL = await uploadParcelLocationImage(
+          parcelLocationImage
+        );
         await updateDoc(documentRef, {
           hasArrived: true,
           arrivalTime: new Date().toISOString(),
-          parcelImageURL: imageURL,
+          parcelImageURL: parcelLabelImageURL,
+          parcelLocationImageURL: parcelLocationImageURL,
         });
         await sendNotification(
           "Parcel Received!",
@@ -215,7 +246,7 @@ export default findParcel = () => {
       />
       <View style={styles.container}>
         <View style={styles.textContainer}>
-          <Text style={styles.textLabel}>{"Parcel Tracking Number"}</Text>
+          <Text style={styles.textLabel}>{"Parcel Tracking Number:"}</Text>
           <Text style={styles.text}>{parcelData.parcelTrackingNumber}</Text>
         </View>
         <View style={styles.textContainer}>
@@ -234,13 +265,49 @@ export default findParcel = () => {
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.textLabel}>
-            {"Parcel Receiver Resident Unit"}
+            {"Parcel Receiver Resident Unit:"}
           </Text>
           <Text style={styles.text}>{parcelData.parcelReceiverUnit}</Text>
         </View>
 
+        {parcelData.hasArrived && (
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 20,
+                fontWeight: "500",
+                fontFamily: "DMBold",
+              }}
+            >
+              Parcel Location:{" "}
+            </Text>
+            <View style={{ height: 300, width: 300 }}>
+              <Image
+                source={{
+                  uri: parcelData.parcelLocationImageURL,
+                }}
+                alt="No Image Selected"
+                style={{
+                  flex: 1,
+                  resizeMode: "contain",
+                }}
+              />
+            </View>
+          </View>
+        )}
+
         {!parcelData.hasArrived && (
-          <UploadParcelImage setImageLocation={setParcelImage} />
+          <>
+            <UploadParcelImage
+              setImageLocation={setParcelImage}
+              imageTitle={"the Parcel Label"}
+            />
+            <UploadParcelImage
+              setImageLocation={setParcelLocationImage}
+              imageTitle={"Placed Parcel Location"}
+            />
+          </>
         )}
 
         {parcelData.hasArrived && (
@@ -255,7 +322,9 @@ export default findParcel = () => {
         <View style={styles.confirmationContainer}>
           <View>
             <Text style={styles.confirmationText}>
-              Confirm Registering Parcel?
+              {!parcelData.hasArrived
+                ? "Confirm Registering Parcel?"
+                : "Confirm Redeeming Parcel?"}
             </Text>
           </View>
 
