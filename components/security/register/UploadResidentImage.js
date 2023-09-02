@@ -156,7 +156,6 @@ export default function UploadResidentImage(props) {
             fontSize: 20,
             fontWeight: "500",
             fontFamily: "DMBold",
-            paddingTop: 30,
           }}
         >
           Upload or Capture Image of Redeemer's Identity Card

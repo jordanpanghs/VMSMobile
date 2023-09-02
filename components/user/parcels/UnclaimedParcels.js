@@ -170,10 +170,11 @@ export default function UnclaimedParcels() {
             <View style={styles.parcelsContainer}>
               <View style={styles.parcelDataContainer}>
                 <Text style={styles.dataText}>{parcel.parcelReceiverName}</Text>
+                <Text style={styles.dataText}>{parcel.parcelReceiverIC}</Text>
+                <Text style={styles.dataText}>{parcel.parcelReceiverUnit}</Text>
                 <Text style={styles.dataText}>
                   {parcel.parcelReceiverTelNo}
                 </Text>
-                <Text style={styles.dataText}>{parcel.parcelReceiverUnit}</Text>
                 <Text style={styles.dataText}>
                   {parcel.parcelTrackingNumber}
                 </Text>
@@ -225,16 +226,18 @@ export default function UnclaimedParcels() {
                     </TouchableOpacity>
                   </View>
                 )}
-                <View style={styles.iconContainer}>
-                  <TouchableOpacity onPress={() => handleEditParcel(parcel)}>
-                    <Feather name="edit" size={30} color={"#007AFF"} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleDeleteParcel(parcel.id)}
-                  >
-                    <Feather name="trash-2" size={30} color={"red"} />
-                  </TouchableOpacity>
-                </View>
+                {!parcel.hasArrived && (
+                  <View style={styles.iconContainer}>
+                    <TouchableOpacity onPress={() => handleEditParcel(parcel)}>
+                      <Feather name="edit" size={30} color={"#007AFF"} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleDeleteParcel(parcel.id)}
+                    >
+                      <Feather name="trash-2" size={30} color={"red"} />
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
             </View>
           )}

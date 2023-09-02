@@ -64,10 +64,9 @@ export default function UploadParcelImage(props) {
             fontSize: 20,
             fontWeight: "500",
             fontFamily: "DMBold",
-            paddingTop: 30,
           }}
         >
-          Upload or Capture Image of The Parcel
+          {"Upload or Capture Image of " + props.imageTitle}
         </Text>
 
         {image && (

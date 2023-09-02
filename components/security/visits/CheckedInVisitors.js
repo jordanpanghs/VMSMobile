@@ -43,6 +43,7 @@ export default CheckedInVisitors = () => {
           const updatedData = snapshot.docs.map((doc) => ({
             id: doc.id,
             date: new Date(doc.data().visitorVisitDateTime).toLocaleString(),
+            entryDateTime: new Date(doc.data().entryTime).toLocaleString(),
             ...doc.data(),
           }));
           setRegisteredVisitorData(updatedData);
@@ -139,6 +140,24 @@ export default CheckedInVisitors = () => {
                     <Feather name="external-link" size={25} color={"green"} />
                   </View>
                 </TouchableOpacity>
+                <View style={{ paddingTop: 20 }}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontFamily: "DMRegular",
+                    }}
+                  >
+                    Entry Date Time:
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontFamily: "DMRegular",
+                    }}
+                  >
+                    {visitor.entryDateTime}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>

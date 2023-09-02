@@ -107,10 +107,11 @@ export default function UnclaimedParcels() {
             <View style={styles.parcelsContainer}>
               <View style={styles.parcelDataContainer}>
                 <Text style={styles.dataText}>{parcel.parcelReceiverName}</Text>
+                <Text style={styles.dataText}>{parcel.parcelReceiverIC}</Text>
+                <Text style={styles.dataText}>{parcel.parcelReceiverUnit}</Text>
                 <Text style={styles.dataText}>
                   {parcel.parcelReceiverTelNo}
                 </Text>
-                <Text style={styles.dataText}>{parcel.parcelReceiverUnit}</Text>
                 <Text style={styles.dataText}>
                   {parcel.parcelTrackingNumber}
                 </Text>
