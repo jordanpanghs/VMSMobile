@@ -42,6 +42,7 @@ export default function UnclaimedParcels() {
         (snapshot) => {
           const updatedData = snapshot.docs.map((doc) => ({
             id: doc.id,
+            date: new Date(doc.data().arrivalTime).toLocaleString(),
             ...doc.data(),
           }));
           setRegisteredParcelsData(updatedData);
@@ -116,6 +117,7 @@ export default function UnclaimedParcels() {
                 <Text style={styles.dataText}>
                   {parcel.parcelTrackingNumber}
                 </Text>
+                <Text>Received on {parcel.date}</Text>
                 <View>
                   <TouchableOpacity
                     style={styles.parcelStatusContainer}

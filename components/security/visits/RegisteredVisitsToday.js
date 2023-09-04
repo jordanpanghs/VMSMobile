@@ -7,7 +7,13 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { collectionGroup, query, where, onSnapshot } from "firebase/firestore";
+import {
+  collectionGroup,
+  query,
+  where,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
 import { startOfDay, endOfDay } from "date-fns";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -35,7 +41,8 @@ const RegisteredVisitsToday = () => {
         collectionGroup(db, "userRegisteredVisitors"),
         where("visitorVisitDateTime", ">=", startOfToday),
         where("visitorVisitDateTime", "<=", endOfToday),
-        where("isCheckedIn", "==", false)
+        where("isCheckedIn", "==", false),
+        orderBy("visitorVisitDateTime", "asc")
       );
 
       const unsubscribe = await onSnapshot(

@@ -10,8 +10,6 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 
-import DateTimePicker from "@react-native-community/datetimepicker";
-
 import { db } from "../../../firebase";
 import {
   collection,
@@ -31,10 +29,6 @@ import {
   getDownloadURL,
   uploadBytes,
 } from "firebase/storage";
-
-import Feather from "react-native-vector-icons/Feather";
-
-import { useAuth } from "../../../context/AuthContext";
 
 import UploadVisitorImage from "./UploadVisitorImage";
 
@@ -59,8 +53,6 @@ const ManualCheckIn = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [plateImage, setPlateImage] = useState("");
   const [licenseImage, setLicenseImage] = useState("");
-
-  const { currentUser, userResidentUnit } = useAuth();
 
   useEffect(() => {
     if (residentUserID && residentName) {

@@ -8,13 +8,21 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { collectionGroup, query, where, onSnapshot } from "firebase/firestore";
+import {
+  collectionGroup,
+  query,
+  where,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
 
 import Feather from "react-native-vector-icons/Feather";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { db } from "../../../firebase";
 import { useRouter } from "expo-router";
+
+import { startOfDay, endOfDay } from "date-fns";
 
 export default function UnclaimedParcels() {
   const [registeredParcelsData, setRegisteredParcelsData] = useState([]);
@@ -31,10 +39,17 @@ export default function UnclaimedParcels() {
 
   const fetchData = async () => {
     try {
+      const today = new Date();
+      const startOfToday = startOfDay(today).toISOString();
+      const endOfToday = endOfDay(today).toISOString();
+
       const q = query(
         collectionGroup(db, "userRegisteredParcels"),
         where("hasArrived", "==", true),
-        where("isClaimed", "==", true)
+        where("isClaimed", "==", true),
+        where("claimTime", ">=", startOfToday),
+        where("claimTime", "<=", endOfToday),
+        orderBy("claimTime", "desc")
       );
 
       const unsubscribe = await onSnapshot(
@@ -42,6 +57,7 @@ export default function UnclaimedParcels() {
         (snapshot) => {
           const updatedData = snapshot.docs.map((doc) => ({
             id: doc.id,
+            date: new Date(doc.data().claimTime).toLocaleString(),
             ...doc.data(),
           }));
           setRegisteredParcelsData(updatedData);
@@ -88,7 +104,9 @@ export default function UnclaimedParcels() {
 
       {isDataFetched && registeredParcelsData.length === 0 && (
         <View style={styles.noDataContainer}>
-          <Text style={styles.noParcelText}>No claimed parcels found.</Text>
+          <Text style={styles.noParcelText}>
+            No claimed parcels found for today.
+          </Text>
           <MaterialCommunityIcons
             name="archive-off-outline"
             size={130}
@@ -115,6 +133,7 @@ export default function UnclaimedParcels() {
                 <Text style={styles.dataText}>
                   {parcel.parcelTrackingNumber}
                 </Text>
+                <Text>Claimed on {parcel.date}</Text>
                 <View>
                   <TouchableOpacity
                     style={styles.parcelStatusContainer}
