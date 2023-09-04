@@ -81,6 +81,37 @@ export default function RegisterVisitor() {
           />
         )}
       </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignContent: "center",
+          gap: 15,
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#007AFF",
+            borderRadius: 5,
+            padding: 10,
+            alignItems: "center",
+          }}
+          onPress={() => router.push("/register/manualcheckin")}
+        >
+          <Text style={styles.buttonText}>Manual Check In</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#007AFF",
+            borderRadius: 5,
+            padding: 10,
+            alignItems: "center",
+          }}
+          onPress={() => router.push("/register/manualcheckout")}
+        >
+          <Text style={styles.buttonText}>Manual Check Out</Text>
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity
         style={styles.button}
         onPress={() => handleToggleQRCamera()}
