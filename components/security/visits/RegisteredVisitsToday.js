@@ -103,17 +103,30 @@ const RegisteredVisitsToday = () => {
               <Text style={styles.dataText}>{visitor.visitorIC}</Text>
               <Text style={styles.dataText}>{visitor.visitorCarPlate}</Text>
               <Text style={styles.dataText}>{visitor.visitorTelNo}</Text>
-              <Text style={styles.dataText}>{visitor.date}</Text>
               <Text style={styles.dataText}>{visitor.visitorVisitPurpose}</Text>
               <Text style={styles.dataText}>{visitor.visitorVisitingUnit}</Text>
+
+              <View style={{ paddingTop: 20, flexDirection: "column" }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontFamily: "DMBold",
+                    color: "#007AFF",
+                  }}
+                >
+                  Visit Date Time:
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontFamily: "DMBold",
+                    color: "#007AFF",
+                  }}
+                >
+                  {visitor.date}
+                </Text>
+              </View>
             </View>
-            <View
-              style={{
-                flexDirection: "column",
-                alignItems: "center",
-                padding: 20,
-              }}
-            ></View>
           </View>
         )}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
