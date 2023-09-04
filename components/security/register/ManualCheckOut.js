@@ -110,7 +110,7 @@ export default ManualCheckOut = () => {
       return;
     } else {
       alert(
-        "Visitor not found. Please enter the correct car plate number. Visitor may have already checked in."
+        "Visitor not found. Please enter the correct car plate number. Visitor must be checked in."
       );
       return;
     }
