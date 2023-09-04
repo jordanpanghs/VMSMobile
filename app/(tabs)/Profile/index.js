@@ -58,6 +58,10 @@ export default function Profile() {
     logout();
   }
 
+  function handleChangePassword() {
+    router.push("profile/editaccount");
+  }
+
   return (
     <View
       style={{
@@ -81,6 +85,13 @@ export default function Profile() {
             <Text style={styles.text}>{userResidentUnit}</Text>
           </View>
         )}
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => handleChangePassword()}
+        >
+          <Text style={styles.buttonText}>Change Account Password</Text>
+        </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.button} onPress={() => handleLogOut()}>
