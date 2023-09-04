@@ -37,7 +37,7 @@ export default function Parcels() {
         <Tab.Screen
           name="Security Claimed Parcels"
           component={SecurityClaimedParcels}
-          options={{ tabBarLabel: "Claimed Parcels" }}
+          options={{ tabBarLabel: "Claimed Parcels Today" }}
         />
       )}
     </Tab.Navigator>
