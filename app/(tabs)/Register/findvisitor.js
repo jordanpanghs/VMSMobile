@@ -5,6 +5,8 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
+  Button,
+  TextInput,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -38,6 +40,8 @@ export default findVisitor = () => {
   const userID = data.userID;
   const documentID = data.documentID;
 
+  const [isEditable, setIsEditable] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -61,7 +65,14 @@ export default findVisitor = () => {
       if (doc.exists()) {
         const parentDoc = await getDoc(doc.ref.parent.parent);
         const notificationToken = parentDoc.data().notificationToken;
-        const docData = { notificationToken, ...doc.data() };
+        const residentName = parentDoc.data().residentName;
+        const residentTelNo = parentDoc.data().residentTelNo;
+        const docData = {
+          notificationToken,
+          residentName,
+          residentTelNo,
+          ...doc.data(),
+        };
         setVisitorData(docData);
         setIsLoading(false);
       } else {
@@ -139,6 +150,7 @@ export default findVisitor = () => {
     );
     const visitorDocRef = doc(userRegisteredVisitorsRef, documentID);
 
+    //Check in visitor
     if (!visitorData.isCheckedIn && !visitorData.isCheckedOut) {
       try {
         const driversLicenseImageURL = await uploadImage(
@@ -147,6 +159,10 @@ export default findVisitor = () => {
         );
         const carPlateImageURL = await uploadImage(plateImage, "plateImage");
         await updateDoc(visitorDocRef, {
+          visitorName: visitorData.visitorName,
+          visitorIC: visitorData.visitorIC,
+          visitorCarPlate: visitorData.visitorCarPlate,
+          visitorVisitPurpose: visitorData.visitorVisitPurpose,
           isCheckedIn: true,
           entryTime: new Date().toISOString(),
           driversLicenseImageURL: driversLicenseImageURL,
@@ -164,6 +180,7 @@ export default findVisitor = () => {
       }
     }
 
+    //Check out visitor
     if (visitorData.isCheckedIn && !visitorData.isCheckedOut) {
       try {
         const exitImageURL = await uploadImage(exitImage, "exitImage");
@@ -198,24 +215,106 @@ export default findVisitor = () => {
       <View style={styles.container}>
         <View style={styles.textContainer}>
           <Text style={styles.textLabel}>{"Visitor's Name:"}</Text>
-          <Text style={styles.text}>{visitorData.visitorName}</Text>
+          {isEditable ? (
+            <TextInput
+              autoCapitalize="characters"
+              style={styles.textInput}
+              value={visitorData.visitorName}
+              onChangeText={(text) =>
+                setVisitorData({
+                  ...visitorData,
+                  visitorName: text.replace(/[^a-zA-Z\s]/g, "").toUpperCase(),
+                })
+              }
+            />
+          ) : (
+            <Text style={styles.text}>{visitorData.visitorName}</Text>
+          )}
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.textLabel}>{"Visitor's IC Number:"}</Text>
-          <Text style={styles.text}>{visitorData.visitorIC}</Text>
+          {isEditable ? (
+            <TextInput
+              keyboardType="numeric"
+              style={styles.textInput}
+              value={visitorData.visitorIC}
+              onChangeText={(text) =>
+                setVisitorData({
+                  ...visitorData,
+                  visitorIC: text.replace(/[^0-9]/g, ""),
+                })
+              }
+            />
+          ) : (
+            <Text style={styles.text}>{visitorData.visitorIC}</Text>
+          )}
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.textLabel}>{"Visitor's Car Plate:"}</Text>
-          <Text style={styles.text}>{visitorData.visitorCarPlate}</Text>
+          {isEditable ? (
+            <TextInput
+              autoCapitalize="characters"
+              style={styles.textInput}
+              value={visitorData.visitorCarPlate}
+              onChangeText={(text) =>
+                setVisitorData({
+                  ...visitorData,
+                  visitorCarPlate: text.toUpperCase(),
+                })
+              }
+            />
+          ) : (
+            <Text style={styles.text}>{visitorData.visitorCarPlate}</Text>
+          )}
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.textLabel}>{"Visitor's Visit Purpose:"}</Text>
-          <Text style={styles.text}>{visitorData.visitorVisitPurpose}</Text>
+          {isEditable && !visitorData.isCheckedIn ? (
+            <TextInput
+              style={styles.textInput}
+              value={visitorData.visitorVisitPurpose}
+              onChangeText={(text) =>
+                setVisitorData({
+                  ...visitorData,
+                  visitorVisitPurpose: text.toUpperCase(),
+                })
+              }
+            />
+          ) : (
+            <Text style={styles.text}>{visitorData.visitorVisitPurpose}</Text>
+          )}
         </View>
         <View style={styles.textContainer}>
-          <Text style={styles.textLabel}>{"Visitor's Visiting Unit:"}</Text>
+          <Text style={styles.textLabel}>{"Visiting Unit:"}</Text>
           <Text style={styles.text}>{visitorData.visitorVisitingUnit}</Text>
         </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textLabel}>{"Resident's Name:"}</Text>
+          <Text style={styles.text}>{visitorData.residentName}</Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textLabel}>{"Resident's Telephone Number:"}</Text>
+          <Text style={styles.text}>{visitorData.residentTelNo}</Text>
+        </View>
+
+        {!visitorData.isCheckedIn && (
+          <TouchableOpacity style={styles.buttonContainer}>
+            <Text
+              onPress={() => setIsEditable(!isEditable)}
+              style={{
+                backgroundColor: "#007AFF",
+                fontFamily: "DMBold",
+                fontSize: 20,
+                color: "white",
+                borderRadius: 5,
+                padding: 10,
+                alignItems: "center",
+              }}
+            >
+              {isEditable ? "Save" : "Edit"}
+            </Text>
+          </TouchableOpacity>
+        )}
 
         {/* If visitor is not checked in , render upload car plate , if not render upload exit car image */}
         {!visitorData.isCheckedIn ? (
@@ -295,6 +394,16 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flexDirection: "column",
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: "red",
+    textAlignVertical: "center",
+    paddingLeft: 10,
+    borderRadius: 5,
+    fontSize: 20,
+    fontFamily: "DMBold",
+    color: "red",
   },
   text: {
     fontSize: 20,
