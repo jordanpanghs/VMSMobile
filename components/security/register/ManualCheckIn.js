@@ -32,6 +32,8 @@ import {
 
 import UploadVisitorImage from "./UploadVisitorImage";
 
+import { useRouter } from "expo-router";
+
 import axios from "axios";
 
 const ManualCheckIn = () => {
@@ -54,6 +56,8 @@ const ManualCheckIn = () => {
   const [plateImage, setPlateImage] = useState("");
   const [licenseImage, setLicenseImage] = useState("");
 
+  const router = useRouter();
+
   useEffect(() => {
     if (residentUserID && residentName) {
       console.log("residentUserID: " + residentUserID);
@@ -63,7 +67,6 @@ const ManualCheckIn = () => {
   }, [residentFound]);
 
   async function findResident() {
-    setIsLoading(true);
     if (
       visitorName.trim() === "" ||
       visitorIC.trim() === "" ||
@@ -74,8 +77,11 @@ const ManualCheckIn = () => {
       residentTelNo.trim() === ""
     ) {
       alert("Please fill in all required fields");
+      setIsLoading(false);
       return;
     }
+
+    setIsLoading(true);
 
     const q = query(
       collectionGroup(db, "users"),
@@ -97,6 +103,7 @@ const ManualCheckIn = () => {
       alert(
         "Resident not found. Please enter the correct resident unit and phone number"
       );
+      setIsLoading(false);
       return;
     }
   }
@@ -191,7 +198,7 @@ const ManualCheckIn = () => {
           setResidentTelNo("");
           setIsLoading(false);
           alert("Visitor added successfully under resident " + residentName);
-          // router.push("/");
+          router.back();
         });
     } catch (error) {
       console.log(error);
