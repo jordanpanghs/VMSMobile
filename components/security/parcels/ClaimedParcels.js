@@ -124,11 +124,7 @@ export default function UnclaimedParcels() {
                       Show Redeemer's IC Image
                     </Text>
                     <View>
-                      <Feather
-                        name="external-link"
-                        size={25}
-                        color={"#007AFF"}
-                      />
+                      <Feather name="external-link" size={25} color={"green"} />
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -202,6 +198,6 @@ const styles = StyleSheet.create({
   parcelStatus: {
     fontSize: 15,
     fontFamily: "DMBold",
-    color: "#007AFF",
+    color: "green",
   },
 });
