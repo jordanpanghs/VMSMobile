@@ -48,11 +48,12 @@ export default findParcel = () => {
   const [icImage, seticImage] = useState("");
 
   const params = useLocalSearchParams();
-  const parcelTrackingNumber = params.qrData;
+  const parcelTrackingNumber = params.qrData.replace(/"/g, "");
 
   const router = useRouter();
 
   useEffect(() => {
+    console.log(parcelTrackingNumber);
     try {
       fetchData();
     } catch (error) {
@@ -85,7 +86,7 @@ export default findParcel = () => {
         setDocumentRef(updatedData[0].docRef);
         setIsLoading(false);
       } else {
-        alert("No such document!");
+        alert("No such parcel found!");
         router.back();
       }
     } catch (error) {

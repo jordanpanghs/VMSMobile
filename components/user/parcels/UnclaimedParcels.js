@@ -126,7 +126,7 @@ export default function UnclaimedParcels() {
     router.push({
       pathname: "/parcels/qrcode",
       params: {
-        documentID: parcel.id,
+        documentID: parcel.parcelTrackingNumber,
       },
     });
   };
@@ -302,6 +302,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: "DMBold",
   },
-  parcelReceived: { color: "#65ad65" },
+  parcelReceived: { color: "green" },
   parcelNotReceived: { color: "#007AFF" },
 });
