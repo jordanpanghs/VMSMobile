@@ -170,7 +170,7 @@ export default findVisitor = () => {
         });
         sendNotification(
           "Visitor Checked In!",
-          "Your visitor has checked in at the security checkpoint."
+          `Visit purpose: ${visitorData.visitorVisitPurpose}`
         );
         setIsLoading(false);
         router.back();
@@ -192,7 +192,7 @@ export default findVisitor = () => {
         });
         sendNotification(
           "Visitor Checked Out!",
-          "Your visitor has checked out. Visitation Complete"
+          `Visitor ${visitorData.visitorName} has checked out of the residence.`
         );
         setIsLoading(false);
         router.back();

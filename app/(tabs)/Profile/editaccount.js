@@ -71,10 +71,12 @@ const editaccount = () => {
             });
         })
         .catch((error) => {
+          setIsLoading(false);
           alert(error);
           console.log(error);
         });
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
     }
   };
