@@ -158,6 +158,7 @@ export default ManualCheckOut = () => {
       to: notificationToken,
       title: notificationTitle,
       body: notificationMessage,
+      data: { route: "visits" },
     };
 
     try {

@@ -114,6 +114,7 @@ export default findVisitor = () => {
       to: visitorData.notificationToken,
       title: notificationTitle,
       body: notificationMessage,
+      data: { route: "visits" },
     };
 
     try {

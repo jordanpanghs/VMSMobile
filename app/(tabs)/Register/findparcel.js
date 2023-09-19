@@ -162,6 +162,7 @@ export default findParcel = () => {
       to: parcelData.notificationToken,
       title: notificationTitle,
       body: notificationMessage,
+      data: { route: "parcels" },
     };
 
     try {

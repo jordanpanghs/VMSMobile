@@ -42,8 +42,13 @@ export default function Profile() {
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-        router.push("visits");
+        console.log(response.notification.request.content.data.route);
+        if (response.notification.request.content.data.route == "visits") {
+          return router.push("visits");
+        }
+        if (response.notification.request.content.data.route == "parcels") {
+          return router.push("parcels");
+        }
       });
 
     return () => {

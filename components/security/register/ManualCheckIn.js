@@ -210,6 +210,7 @@ const ManualCheckIn = () => {
       to: residentNotificationToken,
       title: notificationTitle,
       body: notificationMessage,
+      data: { route: "visits" },
     };
 
     try {
